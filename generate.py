@@ -19,7 +19,7 @@ PREVIOUS  = ["1.1.4", "1.1.3", "1.1.2", "1.1.1", "1.1.0"]
 # (display name, github repo path with case, slug for filename, short desc)
 BRIDGES = [
     ("HackRF One",                              "HackRF-RX-Bridge",   "hackrf-rx-bridge",
-     "8-bit ADC, 24-1750 MHz. Needs WinUSB via Zadig (bundled in installer)."),
+     "8-bit ADC, 1 MHz - 6 GHz. Needs WinUSB via Zadig (bundled in installer)."),
     ("RTL-SDR (R820T2 / V3+)",                  "rtlsdr-rx-bridge",   "rtlsdr-rx-bridge",
      "8-bit ADC, max 2.4 Msps. Needs WinUSB via Zadig (bundled)."),
     ("SDRplay (RSP1A / RSPduo / RSPdx)",        "sdrplay-rx-bridge",  "sdrplay-rx-bridge",
