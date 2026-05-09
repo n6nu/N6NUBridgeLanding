@@ -28,7 +28,7 @@ BRIDGES = [
      "12-bit ADC, 10 Msps native. Needs WinUSB via Zadig (bundled)."),
     ("ADALM-Pluto / Pluto+ (RX only)",          "pluto-rx-bridge",    "pluto-rx-bridge",
      "12-bit ADC, 70 MHz - 6 GHz. Requires Analog Devices' libiio drivers installed first."),
-    ("ADALM-Pluto / Pluto+ (TX too)",           "pluto-wsjtx-bridge", "pluto-wsjtx-bridge",
+    ("ADALM-Pluto / Pluto+ (RX+TX)",            "pluto-wsjtx-bridge", "pluto-wsjtx-bridge",
      "Same hardware as pluto-rx but with TX path enabled. Use this if Pluto is your only radio (QO-100, indoor low-power tests)."),
     ("FunCube Pro+ V2 / FlexRadio DAX-IQ / Malachite", "iq-rx-bridge", "iq-rx-bridge",
      "Sound-card IQ source (any USB sound card delivering stereo IQ as audio L=I, R=Q). No special drivers — Windows audio class."),
