@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>N6NU SDR Bridges — Downloads</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+         max-width: 880px; margin: 2em auto; padding: 0 1em; color: #222; line-height: 1.5; }
+  h1   { color: #1a3d6b; border-bottom: 2px solid #1a3d6b; padding-bottom: 6px; }
+  h2   { color: #1a3d6b; margin-top: 2em; }
+  h3   { color: #444; margin-top: 1.4em; }
+  .bridge { border: 1px solid #ddd; border-radius: 6px; padding: 0.6em 1em;
+            margin: 0.6em 0; background: #fafafa; }
+  .bridge h3 { margin: 0.2em 0 0.3em 0; }
+  .latest { font-weight: bold; color: #1a7f3a; margin: 0.3em 0; }
+  .history { color: #666; font-size: 0.9em; margin: 0.2em 0 0.4em 1.2em; }
+  .history a { color: #888; }
+  a { color: #1a3d6b; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .desc { font-size: 0.92em; color: #555; margin: 0; }
+  .meta { color: #888; font-size: 0.85em; margin-top: 0.2em; }
+  footer { margin-top: 3em; padding-top: 1em; border-top: 1px solid #ddd;
+           font-size: 0.88em; color: #666; }
+  code { background: #eee; padding: 1px 5px; border-radius: 3px; font-size: 0.92em; }
+</style>
+</head>
+<body>
+<h1>N6NU SDR Bridges</h1>
+<p>
+  Windows installers for the <b>SDR bridges</b> that feed wideband I/Q
+  into a modified WSJT-X / QMAP for wide-band Q65 EME and other
+  digital modes. Pick the bridge for your hardware.
+</p>
+<p>
+  Each release is a drop-in upgrade from the previous one. Latest
+  family release: <b>v1.1.5</b>.
+  See the <a href="#beta">beta-tester guide PDF</a> for setup,
+  troubleshooting, and the technical reference.
+</p>
+
+<h2>Bridges</h2>
+
+<div class="bridge">
+  <h3>HackRF One</h3>
+  <p class="desc">8-bit ADC, 24-1750 MHz. Needs WinUSB via Zadig (bundled in installer).</p>
+  <p class="latest">Latest:
+    <a href="https://github.com/n6nu/HackRF-RX-Bridge/releases/download/v1.1.5/hackrf-rx-bridge-1.1.5-setup.exe">hackrf-rx-bridge-1.1.5-setup.exe</a>
+  </p>
+  <p class="history">Previous:
+    <a href="https://github.com/n6nu/HackRF-RX-Bridge/releases/download/v1.1.4/hackrf-rx-bridge-1.1.4-setup.exe">v1.1.4</a> · <a href="https://github.com/n6nu/HackRF-RX-Bridge/releases/download/v1.1.3/hackrf-rx-bridge-1.1.3-setup.exe">v1.1.3</a> · <a href="https://github.com/n6nu/HackRF-RX-Bridge/releases/download/v1.1.2/hackrf-rx-bridge-1.1.2-setup.exe">v1.1.2</a> · <a href="https://github.com/n6nu/HackRF-RX-Bridge/releases/download/v1.1.1/hackrf-rx-bridge-1.1.1-setup.exe">v1.1.1</a> · <a href="https://github.com/n6nu/HackRF-RX-Bridge/releases/download/v1.1.0/hackrf-rx-bridge-1.1.0-setup.exe">v1.1.0</a>
+  </p>
+</div>
+<div class="bridge">
+  <h3>RTL-SDR (R820T2 / V3+)</h3>
+  <p class="desc">8-bit ADC, max 2.4 Msps. Needs WinUSB via Zadig (bundled).</p>
+  <p class="latest">Latest:
+    <a href="https://github.com/n6nu/rtlsdr-rx-bridge/releases/download/v1.1.5/rtlsdr-rx-bridge-1.1.5-setup.exe">rtlsdr-rx-bridge-1.1.5-setup.exe</a>
+  </p>
+  <p class="history">Previous:
+    <a href="https://github.com/n6nu/rtlsdr-rx-bridge/releases/download/v1.1.4/rtlsdr-rx-bridge-1.1.4-setup.exe">v1.1.4</a> · <a href="https://github.com/n6nu/rtlsdr-rx-bridge/releases/download/v1.1.3/rtlsdr-rx-bridge-1.1.3-setup.exe">v1.1.3</a> · <a href="https://github.com/n6nu/rtlsdr-rx-bridge/releases/download/v1.1.2/rtlsdr-rx-bridge-1.1.2-setup.exe">v1.1.2</a> · <a href="https://github.com/n6nu/rtlsdr-rx-bridge/releases/download/v1.1.1/rtlsdr-rx-bridge-1.1.1-setup.exe">v1.1.1</a> · <a href="https://github.com/n6nu/rtlsdr-rx-bridge/releases/download/v1.1.0/rtlsdr-rx-bridge-1.1.0-setup.exe">v1.1.0</a>
+  </p>
+</div>
+<div class="bridge">
+  <h3>SDRplay (RSP1A / RSPduo / RSPdx)</h3>
+  <p class="desc">14-bit ADC. Requires SDRplay API 3.x service installed first from sdrplay.com.</p>
+  <p class="latest">Latest:
+    <a href="https://github.com/n6nu/sdrplay-rx-bridge/releases/download/v1.1.5/sdrplay-rx-bridge-1.1.5-setup.exe">sdrplay-rx-bridge-1.1.5-setup.exe</a>
+  </p>
+  <p class="history">Previous:
+    <a href="https://github.com/n6nu/sdrplay-rx-bridge/releases/download/v1.1.4/sdrplay-rx-bridge-1.1.4-setup.exe">v1.1.4</a> · <a href="https://github.com/n6nu/sdrplay-rx-bridge/releases/download/v1.1.3/sdrplay-rx-bridge-1.1.3-setup.exe">v1.1.3</a> · <a href="https://github.com/n6nu/sdrplay-rx-bridge/releases/download/v1.1.2/sdrplay-rx-bridge-1.1.2-setup.exe">v1.1.2</a> · <a href="https://github.com/n6nu/sdrplay-rx-bridge/releases/download/v1.1.1/sdrplay-rx-bridge-1.1.1-setup.exe">v1.1.1</a> · <a href="https://github.com/n6nu/sdrplay-rx-bridge/releases/download/v1.1.0/sdrplay-rx-bridge-1.1.0-setup.exe">v1.1.0</a>
+  </p>
+</div>
+<div class="bridge">
+  <h3>AirSpy R2</h3>
+  <p class="desc">12-bit ADC, 10 Msps native. Needs WinUSB via Zadig (bundled).</p>
+  <p class="latest">Latest:
+    <a href="https://github.com/n6nu/airspy-rx-bridge/releases/download/v1.1.5/airspy-rx-bridge-1.1.5-setup.exe">airspy-rx-bridge-1.1.5-setup.exe</a>
+  </p>
+  <p class="history">Previous:
+    <a href="https://github.com/n6nu/airspy-rx-bridge/releases/download/v1.1.4/airspy-rx-bridge-1.1.4-setup.exe">v1.1.4</a> · <a href="https://github.com/n6nu/airspy-rx-bridge/releases/download/v1.1.3/airspy-rx-bridge-1.1.3-setup.exe">v1.1.3</a> · <a href="https://github.com/n6nu/airspy-rx-bridge/releases/download/v1.1.2/airspy-rx-bridge-1.1.2-setup.exe">v1.1.2</a> · <a href="https://github.com/n6nu/airspy-rx-bridge/releases/download/v1.1.1/airspy-rx-bridge-1.1.1-setup.exe">v1.1.1</a> · <a href="https://github.com/n6nu/airspy-rx-bridge/releases/download/v1.1.0/airspy-rx-bridge-1.1.0-setup.exe">v1.1.0</a>
+  </p>
+</div>
+<div class="bridge">
+  <h3>ADALM-Pluto / Pluto+ (RX only)</h3>
+  <p class="desc">12-bit ADC, 70 MHz - 6 GHz. Requires Analog Devices' libiio drivers installed first.</p>
+  <p class="latest">Latest:
+    <a href="https://github.com/n6nu/pluto-rx-bridge/releases/download/v1.1.5/pluto-rx-bridge-1.1.5-setup.exe">pluto-rx-bridge-1.1.5-setup.exe</a>
+  </p>
+  <p class="history">Previous:
+    <a href="https://github.com/n6nu/pluto-rx-bridge/releases/download/v1.1.4/pluto-rx-bridge-1.1.4-setup.exe">v1.1.4</a> · <a href="https://github.com/n6nu/pluto-rx-bridge/releases/download/v1.1.3/pluto-rx-bridge-1.1.3-setup.exe">v1.1.3</a> · <a href="https://github.com/n6nu/pluto-rx-bridge/releases/download/v1.1.2/pluto-rx-bridge-1.1.2-setup.exe">v1.1.2</a> · <a href="https://github.com/n6nu/pluto-rx-bridge/releases/download/v1.1.1/pluto-rx-bridge-1.1.1-setup.exe">v1.1.1</a> · <a href="https://github.com/n6nu/pluto-rx-bridge/releases/download/v1.1.0/pluto-rx-bridge-1.1.0-setup.exe">v1.1.0</a>
+  </p>
+</div>
+<div class="bridge">
+  <h3>ADALM-Pluto / Pluto+ (TX too)</h3>
+  <p class="desc">Same hardware as pluto-rx but with TX path enabled. Use this if Pluto is your only radio (QO-100, indoor low-power tests).</p>
+  <p class="latest">Latest:
+    <a href="https://github.com/n6nu/pluto-wsjtx-bridge/releases/download/v1.1.5/pluto-wsjtx-bridge-1.1.5-setup.exe">pluto-wsjtx-bridge-1.1.5-setup.exe</a>
+  </p>
+  <p class="history">Previous:
+    <a href="https://github.com/n6nu/pluto-wsjtx-bridge/releases/download/v1.1.4/pluto-wsjtx-bridge-1.1.4-setup.exe">v1.1.4</a> · <a href="https://github.com/n6nu/pluto-wsjtx-bridge/releases/download/v1.1.3/pluto-wsjtx-bridge-1.1.3-setup.exe">v1.1.3</a> · <a href="https://github.com/n6nu/pluto-wsjtx-bridge/releases/download/v1.1.2/pluto-wsjtx-bridge-1.1.2-setup.exe">v1.1.2</a> · <a href="https://github.com/n6nu/pluto-wsjtx-bridge/releases/download/v1.1.1/pluto-wsjtx-bridge-1.1.1-setup.exe">v1.1.1</a> · <a href="https://github.com/n6nu/pluto-wsjtx-bridge/releases/download/v1.1.0/pluto-wsjtx-bridge-1.1.0-setup.exe">v1.1.0</a>
+  </p>
+</div>
+<div class="bridge">
+  <h3>FunCube Pro+ V2 / FlexRadio DAX-IQ / Malachite</h3>
+  <p class="desc">Sound-card IQ source (any USB sound card delivering stereo IQ as audio L=I, R=Q). No special drivers — Windows audio class.</p>
+  <p class="latest">Latest:
+    <a href="https://github.com/n6nu/iq-rx-bridge/releases/download/v1.1.5/iq-rx-bridge-1.1.5-setup.exe">iq-rx-bridge-1.1.5-setup.exe</a>
+  </p>
+  <p class="history">Previous:
+    <a href="https://github.com/n6nu/iq-rx-bridge/releases/download/v1.1.4/iq-rx-bridge-1.1.4-setup.exe">v1.1.4</a> · <a href="https://github.com/n6nu/iq-rx-bridge/releases/download/v1.1.3/iq-rx-bridge-1.1.3-setup.exe">v1.1.3</a> · <a href="https://github.com/n6nu/iq-rx-bridge/releases/download/v1.1.2/iq-rx-bridge-1.1.2-setup.exe">v1.1.2</a> · <a href="https://github.com/n6nu/iq-rx-bridge/releases/download/v1.1.1/iq-rx-bridge-1.1.1-setup.exe">v1.1.1</a> · <a href="https://github.com/n6nu/iq-rx-bridge/releases/download/v1.1.0/iq-rx-bridge-1.1.0-setup.exe">v1.1.0</a>
+  </p>
+</div>
+
+
+<h2 id="beta">Beta-tester guide</h2>
+<p>
+  PDF covers what's new in this build of WSJT-X / QMAP-improved, why
+  the bridges exist, per-bridge setup (drivers, gains, quirks), a
+  troubleshooting table, and a technical reference at the end.
+</p>
+<p>
+  <a href="WSJTX-QMAP-improved-beta-guide.pdf"><b>WSJTX-QMAP-improved-beta-guide.pdf</b></a>
+  (latest build, served from this site)
+</p>
+<p class="meta">
+  The same PDF also ships inside each bridge installer at
+  <code>{install dir}\WSJTX-QMAP-improved-beta-guide.pdf</code>,
+  accessible from the bridge GUI via <code>Help → User Guide</code>
+  (F1) since v1.1.5.
+</p>
+
+<footer>
+  <p>
+    Author: <b>Andreas Junge, N6NU</b>
+    &lt;<a href="mailto:n6nu@n6nu.org">n6nu@n6nu.org</a>&gt;.
+    Page generated 2026-05-09.
+    Source: <a href="https://github.com/n6nu/N6NUBridgeLanding">github.com/n6nu/N6NUBridgeLanding</a>.
+  </p>
+</footer>
+
+</body>
+</html>
