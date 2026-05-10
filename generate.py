@@ -16,6 +16,14 @@ from pathlib import Path
 LATEST    = "1.1.5"
 PREVIOUS  = ["1.1.4", "1.1.3", "1.1.2", "1.1.1", "1.1.0"]
 
+# Per-bridge version overrides — used when a single bridge ships
+# ahead of the family-aligned LATEST. Keys are the slug. The version
+# string here becomes the Latest link; the family LATEST gets bumped
+# into that bridge's Previous list so older versions stay reachable.
+PER_BRIDGE_LATEST = {
+    "sdrplay-rx-bridge": "1.1.18",
+}
+
 # (display name, github repo path with case, slug for filename, short desc)
 BRIDGES = [
     ("HackRF One",                              "HackRF-RX-Bridge",   "hackrf-rx-bridge",
@@ -39,11 +47,16 @@ URL = ("https://github.com/n6nu/{repo}/releases/download/"
 
 
 def bridge_block(name: str, repo: str, slug: str, desc: str) -> str:
-    latest_url = URL.format(repo=repo, ver=LATEST, slug=slug)
-    latest_file = f"{slug}-{LATEST}-setup.exe"
+    # A per-bridge override means this bridge shipped a release ahead
+    # of the family-aligned LATEST. The previous family LATEST then
+    # leads the Previous list so it's still one click away.
+    bridge_latest = PER_BRIDGE_LATEST.get(slug, LATEST)
+    bridge_prev = ([LATEST] + PREVIOUS) if slug in PER_BRIDGE_LATEST else PREVIOUS
+    latest_url = URL.format(repo=repo, ver=bridge_latest, slug=slug)
+    latest_file = f"{slug}-{bridge_latest}-setup.exe"
     prev_links = " · ".join(
         f'<a href="{URL.format(repo=repo, ver=v, slug=slug)}">v{v}</a>'
-        for v in PREVIOUS
+        for v in bridge_prev
     )
     return f'''<div class="bridge">
   <h3>{name}</h3>
