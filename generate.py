@@ -21,7 +21,7 @@ PREVIOUS  = ["1.1.4", "1.1.3", "1.1.2", "1.1.1", "1.1.0"]
 # string here becomes the Latest link; the family LATEST gets bumped
 # into that bridge's Previous list so older versions stay reachable.
 PER_BRIDGE_LATEST = {
-    "sdrplay-rx-bridge": "1.1.18",
+    "sdrplay-rx-bridge": "1.1.19",
 }
 
 # (display name, github repo path with case, slug for filename, short desc)
