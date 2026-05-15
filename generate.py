@@ -21,40 +21,14 @@ PREVIOUS  = ["1.1.4", "1.1.3", "1.1.2", "1.1.1", "1.1.0"]
 # string here becomes the Latest link; the family LATEST gets bumped
 # into that bridge's Previous list so older versions stay reachable.
 PER_BRIDGE_LATEST = {
-    "sdrplay-rx-bridge": "1.1.19",
+    "sdrplay-rx-bridge": "1.1.21",
     "rtlsdr-rx-bridge":  "1.1.6",
 }
 
-# Diagnostic / debug builds. These are one-off binaries cut to chase
-# a specific tester report, NOT the regular release stream. The page
-# lists them in a separate "Debug builds" section at the bottom so
-# casual visitors don't grab them by accident.
-#   - filename: hosted on this site (next to index.html)
-#   - title  : section heading next to the link
-#   - desc   : what the build does and who it's for
-DEBUG_BUILDS = [
-    {
-        "filename": "sdrplay-rx-bridge-1.1.20-w3sz-r2-setup.exe",
-        "title":    "SDRplay RX Bridge 1.1.20-w3sz r2 — TCP/UDP decoupled",
-        "desc":     ("Built 2026-05-15 for W3SZ. Round-1 diagnostic "
-                     "uncovered the real bug: the Linrad TCP server "
-                     "bind to port 49812 fails with <code>WSAEACCES</code> "
-                     "(Qt: \"The address is protected\") on Win11 boxes "
-                     "where Hyper-V / WSL2 has reserved the upper "
-                     "ephemeral port range. The previous code "
-                     "early-returned on that failure, so the UDP "
-                     "socket was never created and QMAP saw no packets. "
-                     "This build makes the TCP listen non-fatal: bridge "
-                     "now keeps going in UDP-only mode (which is all "
-                     "QMAP needs anyway). Diagnostic for confirming "
-                     "the Hyper-V port reservation: <code>netsh int ipv4 "
-                     "show excludedportrange protocol=tcp</code>. "
-                     "Run the bridge from <code>cmd.exe</code> as "
-                     "<code>sdrplay-rx-bridge.exe 2&gt; bridge-diag.log</code> "
-                     "and email back the first ~15 lines plus a "
-                     "screenshot of QMAP showing decoded signals."),
-    },
-]
+# Diagnostic / debug builds. One-off binaries cut to chase a specific
+# tester report. None currently shipped — most recent (W3SZ r2 2026-05-15)
+# was promoted to the mainline v1.1.21 SDRplay release.
+DEBUG_BUILDS = []
 
 
 def debug_build_block(b):
@@ -66,6 +40,21 @@ def debug_build_block(b):
   </p>
 </div>
 '''
+
+
+def debug_section():
+    """Whole 'Debug builds' section. Caller guards on DEBUG_BUILDS truthiness."""
+    blocks = "".join(debug_build_block(b) for b in DEBUG_BUILDS)
+    return f'''<h2 id="debug">Debug builds</h2>
+<p>
+  One-off diagnostic builds cut to chase a specific tester report.
+  <b>Don't install these unless I've asked you to.</b> They carry an
+  off-stream version number on purpose so they don't get confused
+  with regular releases, and they may have extra logging or
+  experimental fixes that haven't landed in the mainline yet.
+</p>
+
+{blocks}'''
 
 # (display name, github repo path with case, slug for filename, short desc)
 BRIDGES = [
@@ -176,16 +165,7 @@ HTML = f'''<!DOCTYPE html>
   (F1) since v1.1.5.
 </p>
 
-<h2 id="debug">Debug builds</h2>
-<p>
-  One-off diagnostic builds cut to chase a specific tester report.
-  <b>Don't install these unless I've asked you to.</b> They carry an
-  off-stream version number on purpose so they don't get confused
-  with regular releases, and they may have extra logging or
-  experimental fixes that haven't landed in the mainline yet.
-</p>
-
-{"".join(debug_build_block(b) for b in DEBUG_BUILDS)}
+{debug_section() if DEBUG_BUILDS else ""}
 
 <footer>
   <p>
