@@ -34,21 +34,25 @@ PER_BRIDGE_LATEST = {
 #   - desc   : what the build does and who it's for
 DEBUG_BUILDS = [
     {
-        "filename": "sdrplay-rx-bridge-1.1.20-w3sz-ipv4-diag-setup.exe",
-        "title":    "SDRplay RX Bridge 1.1.20-w3sz — IPv4 bind diagnostic",
-        "desc":     ("Built 2026-05-14 for W3SZ. Changes vs v1.1.19: "
-                     "Linrad TCP server and CAT TCP server now bind to "
-                     "<code>QHostAddress::AnyIPv4</code> (0.0.0.0) "
-                     "instead of <code>::Any</code>, the outgoing UDP "
-                     "socket gets an explicit IPv4 source bind, and "
-                     "all three log the actual bound address+family on "
-                     "startup. Investigates whether Qt was silently "
-                     "binding IPv6-only on a clean Win11 box and "
-                     "blocking QMAP's IPv4 loopback connect. "
-                     "Run from <code>cmd.exe</code> as "
+        "filename": "sdrplay-rx-bridge-1.1.20-w3sz-r2-setup.exe",
+        "title":    "SDRplay RX Bridge 1.1.20-w3sz r2 — TCP/UDP decoupled",
+        "desc":     ("Built 2026-05-15 for W3SZ. Round-1 diagnostic "
+                     "uncovered the real bug: the Linrad TCP server "
+                     "bind to port 49812 fails with <code>WSAEACCES</code> "
+                     "(Qt: \"The address is protected\") on Win11 boxes "
+                     "where Hyper-V / WSL2 has reserved the upper "
+                     "ephemeral port range. The previous code "
+                     "early-returned on that failure, so the UDP "
+                     "socket was never created and QMAP saw no packets. "
+                     "This build makes the TCP listen non-fatal: bridge "
+                     "now keeps going in UDP-only mode (which is all "
+                     "QMAP needs anyway). Diagnostic for confirming "
+                     "the Hyper-V port reservation: <code>netsh int ipv4 "
+                     "show excludedportrange protocol=tcp</code>. "
+                     "Run the bridge from <code>cmd.exe</code> as "
                      "<code>sdrplay-rx-bridge.exe 2&gt; bridge-diag.log</code> "
-                     "and email the first 10 lines of "
-                     "<code>bridge-diag.log</code> back."),
+                     "and email back the first ~15 lines plus a "
+                     "screenshot of QMAP showing decoded signals."),
     },
 ]
 
