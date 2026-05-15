@@ -13,8 +13,8 @@ versions stay listed under "Previous" without manual editing.
 from datetime import date
 from pathlib import Path
 
-LATEST    = "1.1.5"
-PREVIOUS  = ["1.1.4", "1.1.3", "1.1.2", "1.1.1", "1.1.0"]
+LATEST    = "1.1.7"
+PREVIOUS  = ["1.1.6", "1.1.5", "1.1.4", "1.1.3", "1.1.2", "1.1.1", "1.1.0"]
 
 # Per-bridge version overrides — used when a single bridge ships
 # ahead of the family-aligned LATEST. Keys are the slug. The version
@@ -22,7 +22,6 @@ PREVIOUS  = ["1.1.4", "1.1.3", "1.1.2", "1.1.1", "1.1.0"]
 # into that bridge's Previous list so older versions stay reachable.
 PER_BRIDGE_LATEST = {
     "sdrplay-rx-bridge": "1.1.21",
-    "rtlsdr-rx-bridge":  "1.1.6",
 }
 
 # Diagnostic / debug builds. One-off binaries cut to chase a specific
