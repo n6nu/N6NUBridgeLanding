@@ -130,11 +130,29 @@
   (F1) since v1.1.5.
 </p>
 
+<h2 id="debug">Debug builds</h2>
+<p>
+  One-off diagnostic builds cut to chase a specific tester report.
+  <b>Don't install these unless I've asked you to.</b> They carry an
+  off-stream version number on purpose so they don't get confused
+  with regular releases, and they may have extra logging or
+  experimental fixes that haven't landed in the mainline yet.
+</p>
+
+<div class="bridge">
+  <h3>SDRplay RX Bridge 1.1.20-w3sz — IPv4 bind diagnostic</h3>
+  <p class="desc">Built 2026-05-14 for W3SZ. Changes vs v1.1.19: Linrad TCP server and CAT TCP server now bind to <code>QHostAddress::AnyIPv4</code> (0.0.0.0) instead of <code>::Any</code>, the outgoing UDP socket gets an explicit IPv4 source bind, and all three log the actual bound address+family on startup. Investigates whether Qt was silently binding IPv6-only on a clean Win11 box and blocking QMAP's IPv4 loopback connect. Run from <code>cmd.exe</code> as <code>sdrplay-rx-bridge.exe 2&gt; bridge-diag.log</code> and email the first 10 lines of <code>bridge-diag.log</code> back.</p>
+  <p class="latest">Download:
+    <a href="sdrplay-rx-bridge-1.1.20-w3sz-ipv4-diag-setup.exe">sdrplay-rx-bridge-1.1.20-w3sz-ipv4-diag-setup.exe</a>
+  </p>
+</div>
+
+
 <footer>
   <p>
     Author: <b>Andreas Junge, N6NU</b>
     &lt;<a href="mailto:n6nu@n6nu.org">n6nu@n6nu.org</a>&gt;.
-    Page generated 2026-05-12.
+    Page generated 2026-05-14.
     Source: <a href="https://github.com/n6nu/N6NUBridgeLanding">github.com/n6nu/N6NUBridgeLanding</a>.
   </p>
 </footer>

@@ -25,6 +25,44 @@ PER_BRIDGE_LATEST = {
     "rtlsdr-rx-bridge":  "1.1.6",
 }
 
+# Diagnostic / debug builds. These are one-off binaries cut to chase
+# a specific tester report, NOT the regular release stream. The page
+# lists them in a separate "Debug builds" section at the bottom so
+# casual visitors don't grab them by accident.
+#   - filename: hosted on this site (next to index.html)
+#   - title  : section heading next to the link
+#   - desc   : what the build does and who it's for
+DEBUG_BUILDS = [
+    {
+        "filename": "sdrplay-rx-bridge-1.1.20-w3sz-ipv4-diag-setup.exe",
+        "title":    "SDRplay RX Bridge 1.1.20-w3sz — IPv4 bind diagnostic",
+        "desc":     ("Built 2026-05-14 for W3SZ. Changes vs v1.1.19: "
+                     "Linrad TCP server and CAT TCP server now bind to "
+                     "<code>QHostAddress::AnyIPv4</code> (0.0.0.0) "
+                     "instead of <code>::Any</code>, the outgoing UDP "
+                     "socket gets an explicit IPv4 source bind, and "
+                     "all three log the actual bound address+family on "
+                     "startup. Investigates whether Qt was silently "
+                     "binding IPv6-only on a clean Win11 box and "
+                     "blocking QMAP's IPv4 loopback connect. "
+                     "Run from <code>cmd.exe</code> as "
+                     "<code>sdrplay-rx-bridge.exe 2&gt; bridge-diag.log</code> "
+                     "and email the first 10 lines of "
+                     "<code>bridge-diag.log</code> back."),
+    },
+]
+
+
+def debug_build_block(b):
+    return f'''<div class="bridge">
+  <h3>{b["title"]}</h3>
+  <p class="desc">{b["desc"]}</p>
+  <p class="latest">Download:
+    <a href="{b["filename"]}">{b["filename"]}</a>
+  </p>
+</div>
+'''
+
 # (display name, github repo path with case, slug for filename, short desc)
 BRIDGES = [
     ("HackRF One",                              "HackRF-RX-Bridge",   "hackrf-rx-bridge",
@@ -133,6 +171,17 @@ HTML = f'''<!DOCTYPE html>
   accessible from the bridge GUI via <code>Help → User Guide</code>
   (F1) since v1.1.5.
 </p>
+
+<h2 id="debug">Debug builds</h2>
+<p>
+  One-off diagnostic builds cut to chase a specific tester report.
+  <b>Don't install these unless I've asked you to.</b> They carry an
+  off-stream version number on purpose so they don't get confused
+  with regular releases, and they may have extra logging or
+  experimental fixes that haven't landed in the mainline yet.
+</p>
+
+{"".join(debug_build_block(b) for b in DEBUG_BUILDS)}
 
 <footer>
   <p>
