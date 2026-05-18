@@ -29,6 +29,21 @@ PER_BRIDGE_LATEST = {
 # was promoted to the mainline v1.1.21 SDRplay release.
 DEBUG_BUILDS = []
 
+# Beta-test builds. Hosted directly on this site (NOT on GitHub Releases)
+# under /beta/. Listed in a red-bordered section with a strong "invited
+# testers only" warning. Format: (name, filename in /beta/, one-line desc).
+BETA_BUILDS = [
+    ("FunCube Pro+ V2 / FlexRadio DAX-IQ / Malachite — TCI beta v1.2.0",
+     "iq-rx-bridge-1.2.0-setup.exe",
+     "Sound-card IQ source with TCI remote-control."),
+    ("SDRplay (RSP1A / RSPduo / RSPdx) — TCI beta v1.2.0",
+     "sdrplay-rx-bridge-1.2.0-setup.exe",
+     "SDRplay-API-3.x bridge with TCI remote-control."),
+    ("RTL-SDR — TCI beta v1.2.0",
+     "rtlsdr-rx-bridge-1.2.0-setup.exe",
+     "RTL-SDR bridge with TCI remote-control."),
+]
+
 
 def debug_build_block(b):
     return f'''<div class="bridge">
@@ -75,6 +90,48 @@ BRIDGES = [
 
 URL = ("https://github.com/n6nu/{repo}/releases/download/"
        "v{ver}/{slug}-{ver}-setup.exe")
+
+
+def beta_block(name: str, filename: str, desc: str) -> str:
+    return f'''  <div class="bridge">
+    <h3>{name}</h3>
+    <p class="desc">{desc}</p>
+    <p class="latest">Beta:
+      <a href="beta/{filename}">{filename}</a>
+    </p>
+  </div>
+'''
+
+
+def beta_section() -> str:
+    blocks = "\n".join(beta_block(*b) for b in BETA_BUILDS)
+    return f'''<div class="beta-warn" id="beta-area">
+  <h2>Beta-test area</h2>
+  <p class="stern">
+    Do not install unless you have been asked to do so. This is raw,
+    untested, and potentially dangerous.
+  </p>
+  <p>
+    Adds the new <b>TCI (Thin Client Interface)</b> WebSocket server
+    so the bridge can run on a remote host (Raspberry Pi at the dish,
+    a second PC, etc.) and WSJT-X drives it as a TCI transceiver across
+    the LAN. <b>Demodulated SSB audio for WSJT-X is now carried over
+    the same TCI WebSocket</b> &mdash; no separate VB-Cable / audio
+    routing needed on the remote machine. Pair with
+    <code>--linrad-udp-target&nbsp;&lt;ip&gt;</code> (broadcast-friendly:
+    accepts <code>192.168.0.255</code> etc.) to also send the wideband
+    IQ stream to a QMAP host elsewhere on the network.
+  </p>
+
+{blocks}
+  <p class="meta">
+    User guide for these bridges &mdash; including the new
+    <i>5.11 TCI (Thin Client Interface) for remote WSJT-X</i> section
+    &mdash; is the <a href="n6nu-sdr-bridges.pdf"><b>n6nu-sdr-bridges.pdf</b></a>
+    served from this site.
+  </p>
+</div>
+'''
 
 
 def bridge_block(name: str, repo: str, slug: str, desc: str) -> str:
@@ -127,6 +184,12 @@ HTML = f'''<!DOCTYPE html>
   footer {{ margin-top: 3em; padding-top: 1em; border-top: 1px solid #ddd;
            font-size: 0.88em; color: #666; }}
   code {{ background: #eee; padding: 1px 5px; border-radius: 3px; font-size: 0.92em; }}
+  .beta-warn {{ border: 2px solid #b00020; background: #fff4f4;
+               border-radius: 6px; padding: 0.6em 1em; margin: 0.8em 0; }}
+  .beta-warn h2 {{ color: #b00020; margin: 0 0 0.3em 0; border-bottom: none; }}
+  .beta-warn p  {{ margin: 0.4em 0; }}
+  .beta-warn .stern {{ color: #b00020; font-weight: bold; }}
+  .beta-warn .bridge {{ background: #fffaf0; border-color: #e0c8a0; }}
 </style>
 </head>
 <body>
@@ -140,12 +203,16 @@ HTML = f'''<!DOCTYPE html>
   Each release is a drop-in upgrade from the previous one. Latest
   family release: <b>v{LATEST}</b>.
   See the <a href="#beta">beta-tester guide PDF</a> for setup,
-  troubleshooting, and the technical reference.
+  troubleshooting, and the technical reference. Invited testers,
+  see also the <a href="#beta-area">beta-test area</a> at the
+  bottom.
 </p>
 
 <h2>Bridges</h2>
 
 {"".join(bridge_block(*b) for b in BRIDGES)}
+
+{beta_section() if BETA_BUILDS else ""}
 
 <h2 id="beta">Beta-tester guide</h2>
 <p>
