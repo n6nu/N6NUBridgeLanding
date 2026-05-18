@@ -33,14 +33,14 @@ DEBUG_BUILDS = []
 # under /beta/. Listed in a red-bordered section with a strong "invited
 # testers only" warning. Format: (name, filename in /beta/, one-line desc).
 BETA_BUILDS = [
-    ("FunCube Pro+ V2 / FlexRadio DAX-IQ / Malachite — TCI beta v1.2.0",
-     "iq-rx-bridge-1.2.0-setup.exe",
+    ("FunCube Pro+ V2 / FlexRadio DAX-IQ / Malachite — TCI beta v1.2.1",
+     "iq-rx-bridge-1.2.1-setup.exe",
      "Sound-card IQ source with TCI remote-control."),
-    ("SDRplay (RSP1A / RSPduo / RSPdx) — TCI beta v1.2.0",
-     "sdrplay-rx-bridge-1.2.0-setup.exe",
+    ("SDRplay (RSP1A / RSPduo / RSPdx) — TCI beta v1.2.1",
+     "sdrplay-rx-bridge-1.2.1-setup.exe",
      "SDRplay-API-3.x bridge with TCI remote-control."),
-    ("RTL-SDR — TCI beta v1.2.0",
-     "rtlsdr-rx-bridge-1.2.0-setup.exe",
+    ("RTL-SDR — TCI beta v1.2.1",
+     "rtlsdr-rx-bridge-1.2.1-setup.exe",
      "RTL-SDR bridge with TCI remote-control."),
 ]
 
