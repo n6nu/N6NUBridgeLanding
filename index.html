@@ -23,6 +23,12 @@
   footer { margin-top: 3em; padding-top: 1em; border-top: 1px solid #ddd;
            font-size: 0.88em; color: #666; }
   code { background: #eee; padding: 1px 5px; border-radius: 3px; font-size: 0.92em; }
+  .beta-warn { border: 2px solid #b00020; background: #fff4f4;
+               border-radius: 6px; padding: 0.6em 1em; margin: 0.8em 0; }
+  .beta-warn h2 { color: #b00020; margin: 0 0 0.3em 0; border-bottom: none; }
+  .beta-warn p  { margin: 0.4em 0; }
+  .beta-warn .stern { color: #b00020; font-weight: bold; }
+  .beta-warn .bridge { background: #fffaf0; border-color: #e0c8a0; }
 </style>
 </head>
 <body>
@@ -36,7 +42,9 @@
   Each release is a drop-in upgrade from the previous one. Latest
   family release: <b>v1.1.7</b>.
   See the <a href="#beta">beta-tester guide PDF</a> for setup,
-  troubleshooting, and the technical reference.
+  troubleshooting, and the technical reference. Invited testers,
+  see also the <a href="#beta-area">beta-test area</a> at the
+  bottom.
 </p>
 
 <h2>Bridges</h2>
@@ -113,6 +121,57 @@
 </div>
 
 
+<div class="beta-warn" id="beta-area">
+  <h2>Beta-test area</h2>
+  <p class="stern">
+    Do not install unless you have been asked to do so. This is raw,
+    untested, and potentially dangerous.
+  </p>
+  <p>
+    Adds the new <b>TCI (Thin Client Interface)</b> WebSocket server
+    so the bridge can run on a remote host (Raspberry Pi at the dish,
+    a second PC, etc.) and WSJT-X drives it as a TCI transceiver across
+    the LAN. <b>Demodulated SSB audio for WSJT-X is now carried over
+    the same TCI WebSocket</b> &mdash; no separate VB-Cable / audio
+    routing needed on the remote machine. Pair with
+    <code>--linrad-udp-target&nbsp;&lt;ip&gt;</code> (broadcast-friendly:
+    accepts <code>192.168.0.255</code> etc.) to also send the wideband
+    IQ stream to a QMAP host elsewhere on the network.
+  </p>
+
+  <div class="bridge">
+    <h3>FunCube Pro+ V2 / FlexRadio DAX-IQ / Malachite — TCI beta v1.2.0</h3>
+    <p class="desc">Sound-card IQ source with TCI remote-control.</p>
+    <p class="latest">Beta:
+      <a href="beta/iq-rx-bridge-1.2.0-setup.exe">iq-rx-bridge-1.2.0-setup.exe</a>
+    </p>
+  </div>
+
+  <div class="bridge">
+    <h3>SDRplay (RSP1A / RSPduo / RSPdx) — TCI beta v1.2.0</h3>
+    <p class="desc">SDRplay-API-3.x bridge with TCI remote-control.</p>
+    <p class="latest">Beta:
+      <a href="beta/sdrplay-rx-bridge-1.2.0-setup.exe">sdrplay-rx-bridge-1.2.0-setup.exe</a>
+    </p>
+  </div>
+
+  <div class="bridge">
+    <h3>RTL-SDR — TCI beta v1.2.0</h3>
+    <p class="desc">RTL-SDR bridge with TCI remote-control.</p>
+    <p class="latest">Beta:
+      <a href="beta/rtlsdr-rx-bridge-1.2.0-setup.exe">rtlsdr-rx-bridge-1.2.0-setup.exe</a>
+    </p>
+  </div>
+
+  <p class="meta">
+    User guide for these bridges &mdash; including the new
+    <i>5.11 TCI (Thin Client Interface) for remote WSJT-X</i> section
+    &mdash; is the <a href="n6nu-sdr-bridges.pdf"><b>n6nu-sdr-bridges.pdf</b></a>
+    served from this site.
+  </p>
+</div>
+
+
 <h2 id="beta">Beta-tester guide</h2>
 <p>
   PDF covers what's new in this build of WSJT-X / QMAP-improved, why
@@ -136,7 +195,7 @@
   <p>
     Author: <b>Andreas Junge, N6NU</b>
     &lt;<a href="mailto:n6nu@n6nu.org">n6nu@n6nu.org</a>&gt;.
-    Page generated 2026-05-15.
+    Page generated 2026-05-17.
     Source: <a href="https://github.com/n6nu/N6NUBridgeLanding">github.com/n6nu/N6NUBridgeLanding</a>.
   </p>
 </footer>
