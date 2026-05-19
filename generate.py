@@ -33,15 +33,15 @@ DEBUG_BUILDS = []
 # under /beta/. Listed in a red-bordered section with a strong "invited
 # testers only" warning. Format: (name, filename in /beta/, one-line desc).
 BETA_BUILDS = [
-    ("FunCube Pro+ V2 / FlexRadio DAX-IQ / Malachite — TCI beta v1.2.6",
-     "iq-rx-bridge-1.2.6-setup.exe",
-     "Sound-card IQ source with TCI remote-control."),
-    ("SDRplay (RSP1A / RSPduo / RSPdx) — TCI beta v1.2.6",
-     "sdrplay-rx-bridge-1.2.6-setup.exe",
-     "SDRplay-API-3.x bridge with TCI remote-control."),
-    ("RTL-SDR — TCI beta v1.2.6",
-     "rtlsdr-rx-bridge-1.2.6-setup.exe",
-     "RTL-SDR bridge with TCI remote-control."),
+    ("FunCube Pro+ V2 / FlexRadio DAX-IQ / Malachite — TCI beta v1.2.7",
+     "iq-rx-bridge-1.2.7-setup.exe",
+     "Sound-card IQ source with TCI remote-control. v1.2.7 adds a Linrad bandwidth selector (96/128/192/256 kHz, clamped to the device's input rate) that hot-restarts in place so QMAP-in-Auto picks up the new rate without a bridge or QMAP restart. Status-panel layout cleanup (no more clipped descenders, visible waterfall bottom margin)."),
+    ("SDRplay (RSP1A / RSPduo / RSPdx) — TCI beta v1.2.7",
+     "sdrplay-rx-bridge-1.2.7-setup.exe",
+     "SDRplay-API-3.x bridge with TCI remote-control. v1.2.7 adds a Linrad bandwidth selector (96/128/192/256 kHz) that hot-restarts in place so QMAP-in-Auto picks up the new rate without a bridge or QMAP restart. Status-panel layout cleanup."),
+    ("RTL-SDR — TCI beta v1.2.7",
+     "rtlsdr-rx-bridge-1.2.7-setup.exe",
+     "RTL-SDR bridge with TCI remote-control. v1.2.7 adds a Linrad bandwidth selector (96/128/192/256 kHz) that hot-restarts in place so QMAP-in-Auto picks up the new rate without a bridge or QMAP restart. Status-panel layout cleanup."),
 ]
 
 
