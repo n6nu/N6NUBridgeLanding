@@ -74,20 +74,20 @@ def debug_section():
 
 # (display name, github repo path with case, slug for filename, short desc)
 BRIDGES = [
-    ("HackRF One",                              "HackRF-RX-Bridge",   "hackrf-rx-bridge",
-     "8-bit ADC, 1 MHz - 6 GHz. Needs WinUSB via Zadig (bundled in installer)."),
-    ("RTL-SDR (R820T2 / V3+)",                  "rtlsdr-rx-bridge",   "rtlsdr-rx-bridge",
-     "8-bit ADC, max 2.4 Msps. Needs WinUSB via Zadig (bundled)."),
     ("SDRplay (RSP1A / RSPduo / RSPdx)",        "sdrplay-rx-bridge",  "sdrplay-rx-bridge",
      "14-bit ADC. Requires SDRplay API 3.x service installed first from sdrplay.com."),
-    ("AirSpy R2",                               "airspy-rx-bridge",   "airspy-rx-bridge",
-     "12-bit ADC, 10 Msps native. Needs WinUSB via Zadig (bundled)."),
-    ("ADALM-Pluto / Pluto+ (RX only)",          "pluto-rx-bridge",    "pluto-rx-bridge",
-     "12-bit ADC, 70 MHz - 6 GHz. Requires Analog Devices' libiio drivers installed first."),
-    ("ADALM-Pluto / Pluto+ (RX+TX)",            "pluto-wsjtx-bridge", "pluto-wsjtx-bridge",
-     "Same hardware as pluto-rx but with TX path enabled. Use this if Pluto is your only radio (QO-100, indoor low-power tests)."),
+    ("RTL-SDR (R820T2 / V3+)",                  "rtlsdr-rx-bridge",   "rtlsdr-rx-bridge",
+     "8-bit ADC, max 2.4 Msps. Needs WinUSB via Zadig (bundled)."),
     ("FunCube Pro+ V2 / FlexRadio DAX-IQ / Malachite", "iq-rx-bridge", "iq-rx-bridge",
      "Sound-card IQ source (any USB sound card delivering stereo IQ as audio L=I, R=Q). No special drivers — Windows audio class."),
+    ("HackRF One",                              "HackRF-RX-Bridge",   "hackrf-rx-bridge",
+     "8-bit ADC, 1 MHz - 6 GHz. Needs WinUSB via Zadig (bundled in installer)."),
+    ("ADALM-Pluto / Pluto+ (RX only)",          "pluto-rx-bridge",    "pluto-rx-bridge",
+     "12-bit ADC, 70 MHz - 6 GHz. Requires Analog Devices' libiio drivers installed first."),
+    ("AirSpy R2",                               "airspy-rx-bridge",   "airspy-rx-bridge",
+     "12-bit ADC, 10 Msps native. Needs WinUSB via Zadig (bundled)."),
+    ("ADALM-Pluto / Pluto+ (RX+TX)",            "pluto-wsjtx-bridge", "pluto-wsjtx-bridge",
+     "Same hardware as pluto-rx but with TX path enabled. Use this if Pluto is your only radio (QO-100, indoor low-power tests)."),
 ]
 
 URL = ("https://github.com/n6nu/{repo}/releases/download/"
