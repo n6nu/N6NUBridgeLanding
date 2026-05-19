@@ -21,7 +21,9 @@ PREVIOUS  = ["1.1.6", "1.1.5", "1.1.4", "1.1.3", "1.1.2", "1.1.1", "1.1.0"]
 # string here becomes the Latest link; the family LATEST gets bumped
 # into that bridge's Previous list so older versions stay reachable.
 PER_BRIDGE_LATEST = {
-    "sdrplay-rx-bridge": "1.1.21",
+    "iq-rx-bridge":     "1.2.7",
+    "rtlsdr-rx-bridge": "1.2.7",
+    "sdrplay-rx-bridge": "1.2.7",
 }
 
 # Diagnostic / debug builds. One-off binaries cut to chase a specific
@@ -33,15 +35,6 @@ DEBUG_BUILDS = []
 # under /beta/. Listed in a red-bordered section with a strong "invited
 # testers only" warning. Format: (name, filename in /beta/, one-line desc).
 BETA_BUILDS = [
-    ("FunCube Pro+ V2 / FlexRadio DAX-IQ / Malachite — TCI beta v1.2.7",
-     "iq-rx-bridge-1.2.7-setup.exe",
-     "Sound-card IQ source with TCI remote-control. v1.2.7 adds a Linrad bandwidth selector (96/128/192/256 kHz, clamped to the device's input rate) that hot-restarts in place so QMAP-in-Auto picks up the new rate without a bridge or QMAP restart. Status-panel layout cleanup (no more clipped descenders, visible waterfall bottom margin)."),
-    ("SDRplay (RSP1A / RSPduo / RSPdx) — TCI beta v1.2.7",
-     "sdrplay-rx-bridge-1.2.7-setup.exe",
-     "SDRplay-API-3.x bridge with TCI remote-control. v1.2.7 adds a Linrad bandwidth selector (96/128/192/256 kHz) that hot-restarts in place so QMAP-in-Auto picks up the new rate without a bridge or QMAP restart. Status-panel layout cleanup."),
-    ("RTL-SDR — TCI beta v1.2.7",
-     "rtlsdr-rx-bridge-1.2.7-setup.exe",
-     "RTL-SDR bridge with TCI remote-control. v1.2.7 adds a Linrad bandwidth selector (96/128/192/256 kHz) that hot-restarts in place so QMAP-in-Auto picks up the new rate without a bridge or QMAP restart. Status-panel layout cleanup."),
     ("HackRF One (RX-only) — TCI beta v1.2.7",
      "hackrf-rx-bridge-1.2.7-setup.exe",
      "HackRF One as an RX-only feeder with TCI remote-control. v1.2.7 adds the Linrad bandwidth selector (96/128/192/256 kHz) with in-place hot-restart so QMAP-in-Auto picks up the new rate without restarting anything. Status-panel layout cleanup."),
