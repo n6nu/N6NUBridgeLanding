@@ -42,6 +42,15 @@ BETA_BUILDS = [
     ("RTL-SDR — TCI beta v1.2.7",
      "rtlsdr-rx-bridge-1.2.7-setup.exe",
      "RTL-SDR bridge with TCI remote-control. v1.2.7 adds a Linrad bandwidth selector (96/128/192/256 kHz) that hot-restarts in place so QMAP-in-Auto picks up the new rate without a bridge or QMAP restart. Status-panel layout cleanup."),
+    ("HackRF One (RX-only) — TCI beta v1.2.7",
+     "hackrf-rx-bridge-1.2.7-setup.exe",
+     "HackRF One as an RX-only feeder with TCI remote-control. v1.2.7 adds the Linrad bandwidth selector (96/128/192/256 kHz) with in-place hot-restart so QMAP-in-Auto picks up the new rate without restarting anything. Status-panel layout cleanup."),
+    ("AirSpy R2 — TCI beta v1.2.7",
+     "airspy-rx-bridge-1.2.7-setup.exe",
+     "AirSpy R2 bridge with TCI remote-control. v1.2.7 adds the Linrad bandwidth selector (96/128/192/256 kHz) with in-place hot-restart so QMAP-in-Auto picks up the new rate without restarting anything. Status-panel layout cleanup."),
+    ("Pluto / Pluto+ (RX-only) — TCI beta v1.2.7",
+     "pluto-rx-bridge-1.2.7-setup.exe",
+     "ADALM-Pluto / Pluto+ as an RX-only feeder with TCI remote-control. v1.2.7 adds the Linrad bandwidth selector (96/128/192/256 kHz) with in-place hot-restart so QMAP-in-Auto picks up the new rate without restarting anything. Status-panel layout cleanup."),
 ]
 
 
