@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>QMAP Multi-Instance Guide</title>
+<meta name="description" content="Run two IQ RX Bridges and two QMAPs side by side, with a FlexRadio 6600 receiving H and V polarization as the worked example.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root {
+    --ground: #f5f7fa;
+    --surface: #ffffff;
+    --ink: #17212c;
+    --muted: #556373;
+    --rule: #d2dbe5;
+    --navy: #1d4a78;
+    --tint: #e6edf5;
+    --code-bg: #edf1f6;
+    --h: #1b6a8c;
+    --h-tint: #e2eff5;
+    --v: #85447e;
+    --v-tint: #f3e7f0;
+    --note-bg: #fff3d2;
+    --note-ink: #694700;
+    --note-rule: #e6c46a;
+    --focus: #1d4a78;
+
+    --display: "Barlow Semi Condensed", "Segoe UI Semibold", "Arial Narrow", sans-serif;
+    --body: "Source Sans 3", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --mono: "IBM Plex Mono", Consolas, "Courier New", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0e151d;
+      --surface: #141e28;
+      --ink: #dbe4ed;
+      --muted: #97a6b5;
+      --rule: #283646;
+      --navy: #8db9e4;
+      --tint: #1a2735;
+      --code-bg: #1a2531;
+      --h: #6cb5d6;
+      --h-tint: #122e3b;
+      --v: #d095c7;
+      --v-tint: #311f37;
+      --note-bg: #2b2412;
+      --note-ink: #ebc76b;
+      --note-rule: #6b5621;
+      --focus: #8db9e4;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0e151d;
+    --surface: #141e28;
+    --ink: #dbe4ed;
+    --muted: #97a6b5;
+    --rule: #283646;
+    --navy: #8db9e4;
+    --tint: #1a2735;
+    --code-bg: #1a2531;
+    --h: #6cb5d6;
+    --h-tint: #122e3b;
+    --v: #d095c7;
+    --v-tint: #311f37;
+    --note-bg: #2b2412;
+    --note-ink: #ebc76b;
+    --note-rule: #6b5621;
+    --focus: #8db9e4;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+  a { color: var(--navy); text-underline-offset: 2px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 3px; }
+
+  .page { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .prose { max-width: 68ch; }
+
+  /* ---------- Header ---------- */
+  header.masthead { display: grid; gap: 0.75rem; padding-bottom: 1.75rem; border-bottom: 2px solid var(--navy); }
+  .eyebrow {
+    font-family: var(--display); font-weight: 600; font-size: 0.8rem;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--navy); margin: 0;
+  }
+  h1 {
+    font-family: var(--display); font-weight: 700; font-size: clamp(2.1rem, 5vw, 2.85rem);
+    line-height: 1.05; letter-spacing: -0.005em; margin: 0; text-wrap: balance;
+  }
+  .lede { font-size: 1.2rem; line-height: 1.5; color: var(--ink); margin: 0; max-width: 60ch; text-wrap: pretty; }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; margin: 0.25rem 0 0; padding: 0; list-style: none; font-size: 0.9rem; color: var(--muted); }
+  .meta strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Section rhythm ---------- */
+  main { display: grid; gap: 3rem; margin-top: 2.25rem; }
+  section { display: grid; gap: 1rem; }
+  h2 {
+    font-family: var(--display); font-weight: 600; font-size: 1.6rem; line-height: 1.15;
+    margin: 0; color: var(--ink); text-wrap: balance;
+  }
+  h3 { font-family: var(--display); font-weight: 600; font-size: 1.2rem; margin: 0.5rem 0 0; text-wrap: balance; }
+  p { margin: 0; }
+  ul, ol { margin: 0; padding-left: 1.3rem; }
+  li + li { margin-top: 0.35rem; }
+
+  code, kbd, .mono { font-family: var(--mono); font-size: 0.88em; }
+  code { background: var(--code-bg); padding: 0.08em 0.35em; border-radius: 3px; white-space: nowrap; }
+  pre {
+    margin: 0; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 4px;
+    padding: 0.8rem 1rem; overflow-x: auto; font-family: var(--mono); font-size: 0.9rem; line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; white-space: pre; font-size: inherit; }
+  .menu { font-weight: 600; white-space: nowrap; }
+
+  /* polarization tags */
+  .pol {
+    display: inline-block; font-family: var(--display); font-weight: 700; font-size: 0.78em;
+    letter-spacing: 0.06em; line-height: 1; padding: 0.22em 0.45em 0.2em; border-radius: 3px;
+    vertical-align: 0.08em; border: 1px solid currentColor;
+  }
+  .pol.h { color: var(--h); background: var(--h-tint); }
+  .pol.v { color: var(--v); background: var(--v-tint); }
+
+  /* ---------- Signal chain ---------- */
+  figure.chain-fig { margin: 0; display: grid; gap: 0.75rem; }
+  .chain {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.08fr);
+    column-gap: 1.35rem; row-gap: 0.85rem;
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+    padding: 1.1rem;
+  }
+  .node {
+    position: relative; display: grid; gap: 0.15rem; align-content: start;
+    padding: 0.65rem 0.7rem 0.7rem; border-radius: 4px; background: var(--surface);
+    border: 1px solid var(--rule); border-top: 3px solid var(--lane); min-width: 0;
+  }
+  .lane-h { --lane: var(--h); --lane-tint: var(--h-tint); }
+  .lane-v { --lane: var(--v); --lane-tint: var(--v-tint); }
+  .node .kind {
+    font-family: var(--display); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--lane);
+  }
+  .node .what { font-weight: 600; font-size: 0.98rem; line-height: 1.25; overflow-wrap: break-word; }
+  .node .detail { font-family: var(--mono); font-size: 0.76rem; color: var(--muted); line-height: 1.4; overflow-wrap: break-word; }
+  .lane-h .node:not(:last-child)::after,
+  .lane-v .node:not(:last-child)::after,
+  .node.to-shared::after {
+    content: ""; position: absolute; top: 50%; right: -1.35rem; width: 1.35rem; height: 2px;
+    background: var(--lane); transform: translateY(-1px);
+  }
+  .lane-h .node:not(:last-child)::before,
+  .lane-v .node:not(:last-child)::before,
+  .node.to-shared::before {
+    content: ""; position: absolute; top: 50%; right: -1.35rem; transform: translateY(-5px);
+    border-left: 7px solid var(--lane); border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+    z-index: 1;
+  }
+  .lane { display: contents; }
+  .shared {
+    grid-column: 5; grid-row: 1 / span 2; align-self: stretch; align-content: center;
+    border-top: 3px solid var(--navy); --lane: var(--navy);
+    background: var(--tint);
+  }
+  .lane-h .qmap { grid-column: 4; grid-row: 1; }
+  .lane-v .qmap { grid-column: 4; grid-row: 2; }
+  figcaption { font-size: 0.92rem; color: var(--muted); max-width: 68ch; }
+
+  @media (max-width: 720px) {
+    .chain { grid-template-columns: minmax(0, 1fr); padding: 0.9rem; row-gap: 0.55rem; }
+    .lane { display: grid; gap: 0.55rem; padding-left: 0.75rem; border-left: 3px solid var(--lane); }
+    .lane-h .qmap, .lane-v .qmap { grid-column: auto; grid-row: auto; }
+    .shared { grid-column: auto; grid-row: auto; }
+    .lane-h .node::after, .lane-v .node::after, .node.to-shared::after,
+    .lane-h .node::before, .lane-v .node::before, .node.to-shared::before { display: none; }
+    .lane + .lane { margin-top: 0.5rem; }
+  }
+
+  /* ---------- Tables ---------- */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  th, td { text-align: left; vertical-align: top; padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--rule); }
+  tr:last-child td, tr:last-child th { border-bottom: 0; }
+  thead th {
+    font-family: var(--display); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.09em;
+    text-transform: uppercase; color: var(--muted); background: var(--tint); white-space: nowrap;
+  }
+  thead th.col-h { color: var(--h); }
+  thead th.col-v { color: var(--v); }
+  tbody th { font-weight: 600; color: var(--ink); white-space: nowrap; }
+  td.num, td .mono, td code { font-variant-numeric: tabular-nums; }
+  td.col-h { background: color-mix(in srgb, var(--h-tint) 45%, transparent); }
+  td.col-v { background: color-mix(in srgb, var(--v-tint) 45%, transparent); }
+  td code { white-space: nowrap; }
+  .group-row th {
+    font-family: var(--display); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--navy); background: var(--surface); padding-top: 0.9rem;
+  }
+  .rule-col { color: var(--muted); font-size: 0.9rem; }
+
+  /* ---------- Steps ---------- */
+  ol.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 2.25rem; counter-reset: step; }
+  ol.steps > li { display: grid; grid-template-columns: 3rem minmax(0, 1fr); column-gap: 1rem; margin: 0; counter-increment: step; }
+  ol.steps > li::before {
+    content: counter(step); font-family: var(--display); font-weight: 700; font-size: 2.3rem; line-height: 1;
+    color: var(--step, var(--navy)); text-align: right; padding-top: 0.05rem;
+  }
+  ol.steps > li.step-h { --step: var(--h); }
+  ol.steps > li.step-v { --step: var(--v); }
+  .step-body { display: grid; gap: 0.8rem; min-width: 0; }
+  .step-body h3 { margin: 0; font-size: 1.35rem; }
+
+  /* settings, read like the dialog they come from */
+  dl.settings {
+    margin: 0; display: grid; grid-template-columns: minmax(10rem, max-content) minmax(0, 1fr);
+    border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); overflow: hidden;
+  }
+  dl.settings .where {
+    grid-column: 1 / -1; margin: 0; padding: 0.45rem 0.85rem; background: var(--tint);
+    font-family: var(--display); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  dl.settings dt, dl.settings dd { margin: 0; padding: 0.5rem 0.85rem; border-top: 1px solid var(--rule); }
+  dl.settings .where + dt, dl.settings .where + dt + dd { border-top: 0; }
+  dl.settings dt { font-weight: 600; }
+  dl.settings dd { color: var(--ink); }
+  dl.settings dd .why { display: block; color: var(--muted); font-size: 0.92rem; margin-top: 0.1rem; }
+  dl.settings dd.diff { background: var(--v-tint); }
+  @media (max-width: 560px) {
+    dl.settings { grid-template-columns: minmax(0, 1fr); }
+    dl.settings dd { border-top: 0; padding-top: 0; }
+  }
+
+  .note {
+    border-left: 3px solid var(--note-rule); background: var(--note-bg); color: var(--ink);
+    padding: 0.75rem 1rem; border-radius: 0 4px 4px 0; display: grid; gap: 0.35rem;
+  }
+  .note .label {
+    font-family: var(--display); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--note-ink);
+  }
+
+  .contents { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin: 0; padding: 0; list-style: none; font-size: 0.95rem; }
+  .contents li + li { margin: 0; }
+
+  footer { margin-top: 3.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.9rem; display: grid; gap: 0.35rem; }
+
+  @media print {
+    body { background: #fff; color: #000; font-size: 10.5pt; }
+    .page { padding: 0; max-width: none; }
+    section, ol.steps > li, .chain, .table-wrap, dl.settings { break-inside: avoid; }
+    .contents { display: none; }
+    a { color: inherit; text-decoration: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <p class="eyebrow">N6NU SDR Bridges &middot; Operator guide</p>
+    <h1>QMAP Multi-Instance Guide</h1>
+    <p class="lede">Run two IQ RX Bridges and two QMAPs side by side on one computer. The worked example is a FlexRadio 6600 receiving both polarizations at once, one transverter for <span class="pol h">H</span> and one for <span class="pol v">V</span>.</p>
+    <ul class="meta">
+      <li><strong>IQ RX Bridge</strong> v2.1.1 or later</li>
+      <li><strong>WSJT-X Improved</strong> 3.2 series, with QMAP v1.0</li>
+      <li>Updated 10 September 2026</li>
+    </ul>
+  </header>
+
+  <main>
+    <nav aria-label="On this page">
+      <ul class="contents">
+        <li><a href="#picture">The picture</a></li>
+        <li><a href="#plan">Port plan</a></li>
+        <li><a href="#setup">Setup, step by step</a></li>
+        <li><a href="#check">Check it works</a></li>
+        <li><a href="#trouble">Troubleshooting</a></li>
+        <li><a href="#more">A third instance</a></li>
+      </ul>
+    </nav>
+
+    <section id="picture" aria-labelledby="picture-h">
+      <h2 id="picture-h">The picture</h2>
+      <div class="prose">
+        <p>Each polarization gets its own complete receive chain: one panadapter, one bridge, one QMAP. The two chains never share a port or a settings file. They only meet at WSJT-X, which takes clicks from whichever QMAP you point it at.</p>
+      </div>
+      <figure class="chain-fig">
+        <div class="chain" role="img" aria-label="Two receive chains. H: Flex panadapter on DAX IQ 1, IQ RX Bridge with default settings, Linrad UDP port 50004 and TCP port 49812, QMAP instance ID 1. V: Flex panadapter on DAX IQ 2, IQ RX Bridge started with --instance V, UDP port 50005 and TCP port 49813, QMAP started with --rig-name=V as instance ID 2. Both QMAPs feed one WSJT-X, which listens to source 1 or 2.">
+          <div class="lane lane-h">
+            <div class="node"><span class="kind">Flex 6600</span><span class="what">Panadapter H</span><span class="detail">DAX IQ 1 &middot; 192&nbsp;kHz</span></div>
+            <div class="node"><span class="kind">IQ RX Bridge</span><span class="what">Default shortcut</span><span class="detail">IQ RX Bridge.ini</span></div>
+            <div class="node"><span class="kind">Linrad stream</span><span class="what">UDP 50004</span><span class="detail">TCP 49812</span></div>
+            <div class="node qmap to-shared"><span class="kind">QMAP</span><span class="what">Default copy</span><span class="detail">Instance ID 1</span></div>
+          </div>
+          <div class="lane lane-v">
+            <div class="node"><span class="kind">Flex 6600</span><span class="what">Panadapter V</span><span class="detail">DAX IQ 2 &middot; 192&nbsp;kHz</span></div>
+            <div class="node"><span class="kind">IQ RX Bridge</span><span class="what">--instance V</span><span class="detail">IQ RX Bridge - V.ini</span></div>
+            <div class="node"><span class="kind">Linrad stream</span><span class="what">UDP 50005</span><span class="detail">TCP 49813</span></div>
+            <div class="node qmap to-shared"><span class="kind">QMAP</span><span class="what">--rig-name=V</span><span class="detail">Instance ID 2</span></div>
+          </div>
+          <div class="node shared"><span class="kind">WSJT-X Improved</span><span class="what">One window</span><span class="detail">Decode &rsaquo; QMAP/MAP65 source: 1 or 2</span></div>
+        </div>
+        <figcaption>Every number that differs between the two chains goes up by exactly one. That single rule is the whole trick, and it is what you repeat for a third band or receiver.</figcaption>
+      </figure>
+      <div class="note" role="note">
+        <span class="label">What this is, and isn't</span>
+        <p>This gives you two independent decoders, one per polarization. A station heard on both shows up in both QMAPs. It is not MAP65-style cross-polarization: each bridge sends a single channel, so nothing combines the two signals and there is no polarization-angle readout.</p>
+      </div>
+    </section>
+
+    <section id="plan" aria-labelledby="plan-h">
+      <h2 id="plan-h">Port plan</h2>
+      <div class="prose">
+        <p>Fill this in before touching any settings. The <span class="pol h">H</span> column is simply what a single-instance install already uses, so your existing setup becomes the H chain unchanged.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th scope="col">Setting</th><th scope="col" class="col-h">H</th><th scope="col" class="col-v">V</th><th scope="col">A third one</th></tr>
+          </thead>
+          <tbody>
+            <tr class="group-row"><th colspan="4" scope="colgroup">Flex</th></tr>
+            <tr><th scope="row">DAX IQ channel</th><td class="col-h">DAX IQ 1</td><td class="col-v">DAX IQ 2</td><td class="rule-col">DAX IQ 3</td></tr>
+            <tr class="group-row"><th colspan="4" scope="colgroup">IQ RX Bridge</th></tr>
+            <tr><th scope="row">Shortcut adds</th><td class="col-h">nothing</td><td class="col-v"><code>--instance V</code></td><td class="rule-col"><code>--instance</code> + a new name</td></tr>
+            <tr><th scope="row">Settings file</th><td class="col-h"><code>IQ RX Bridge.ini</code></td><td class="col-v"><code>IQ RX Bridge - V.ini</code></td><td class="rule-col">created for you</td></tr>
+            <tr><th scope="row">Hardware label</th><td class="col-h">Flex 6600 H</td><td class="col-v">Flex 6600 V</td><td class="rule-col">anything you can tell apart</td></tr>
+            <tr><th scope="row">Linrad TCP port</th><td class="col-h num"><code>49812</code></td><td class="col-v num"><code>49813</code></td><td class="rule-col num"><code>49814</code></td></tr>
+            <tr><th scope="row">Linrad UDP port</th><td class="col-h num"><code>50004</code></td><td class="col-v num"><code>50005</code></td><td class="rule-col num"><code>50006</code></td></tr>
+            <tr class="group-row"><th colspan="4" scope="colgroup">QMAP</th></tr>
+            <tr><th scope="row">Shortcut adds</th><td class="col-h">nothing</td><td class="col-v"><code>--rig-name=V</code></td><td class="rule-col"><code>--rig-name=</code> + a new name</td></tr>
+            <tr><th scope="row">Settings file</th><td class="col-h"><code>qmap.ini</code></td><td class="col-v"><code>qmap-V.ini</code></td><td class="rule-col">created for you</td></tr>
+            <tr><th scope="row">Port</th><td class="col-h num"><code>50004</code></td><td class="col-v num"><code>50005</code></td><td class="rule-col num"><code>50006</code></td></tr>
+            <tr><th scope="row">TCP port</th><td class="col-h num"><code>49812</code></td><td class="col-v num"><code>49813</code></td><td class="rule-col num"><code>49814</code></td></tr>
+            <tr><th scope="row">Instance ID</th><td class="col-h num">1</td><td class="col-v num">2</td><td class="rule-col num">3 &nbsp;(4 is the last)</td></tr>
+            <tr><th scope="row">Name</th><td class="col-h">H</td><td class="col-v">V</td><td class="rule-col">shown in the title bar</td></tr>
+            <tr class="group-row"><th colspan="4" scope="colgroup">WSJT-X</th></tr>
+            <tr><th scope="row">QMAP/MAP65 source</th><td class="col-h num">1</td><td class="col-v num">2</td><td class="rule-col num">3</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="prose" style="color: var(--muted); font-size: 0.92rem;">Bridge settings live in <code>%APPDATA%\n6nu\</code>. QMAP settings live in <code>%LOCALAPPDATA%\QMAP\</code>, which QMAP opens for you from <span class="menu">File &rsaquo; Open QMAP data directory</span>.</p>
+    </section>
+
+    <section id="setup" aria-labelledby="setup-h">
+      <h2 id="setup-h">Setup, step by step</h2>
+      <div class="note" role="note">
+        <span class="label">Before you start</span>
+        <ul>
+          <li>You need the QMAP that ships with WSJT-X Improved. The stock K1JT QMAP cannot keep separate settings for a second copy.</li>
+          <li>If IQ RX Bridge v2.1.1 opens a blank window and closes within a couple of seconds, install the Microsoft Visual C++ Redistributable (x64) first. Newer installers carry it themselves.</li>
+        </ul>
+      </div>
+
+      <ol class="steps">
+        <li>
+          <div class="step-body">
+            <h3>Give each polarization its own IQ stream</h3>
+            <p class="prose">In SmartSDR, open one panadapter per transverter: one on the H transverter, one on V. IQ streams belong to a panadapter, so assign each panadapter its own <strong>DAX IQ</strong> channel, DAX IQ 1 for H and DAX IQ 2 for V, and set both to 192&nbsp;kHz.</p>
+            <p class="prose">Use DAX IQ, not the DAX audio channels. The audio channels are only a few kilohertz wide, which is why a QMAP fed from one shows a thin sliver instead of the band.</p>
+          </div>
+        </li>
+
+        <li class="step-h">
+          <div class="step-body">
+            <h3>Set up the <span class="pol h">H</span> bridge</h3>
+            <p class="prose">Start IQ RX Bridge from its normal desktop shortcut and open Settings. These are the values that matter for this setup.</p>
+            <dl class="settings">
+              <div class="where">Sound card</div>
+              <dt>Input device</dt><dd>The DAX IQ 1 device<span class="why">Pick it from the list; the names come from Windows.</span></dd>
+              <dt>Sample rate</dt><dd><span class="mono">192 000 Hz</span><span class="why">Match what the Flex is sending.</span></dd>
+              <dt>Swap I/Q</dt><dd>Off<span class="why">Turn it on only if signals look mirrored around the center of QMAP's window.</span></dd>
+              <dt>Input gain</dt><dd><span class="mono">1.00&times;</span><span class="why">DAX IQ already arrives at a sensible level. Raising this clips; it adds no sensitivity.</span></dd>
+              <dt>Hardware label</dt><dd>Flex 6600 H<span class="why">Shown on the bridge's status panel, so you can tell the two bridge windows apart at a glance.</span></dd>
+              <dt>Follow WSJT-X dial</dt><dd>Off<span class="why">The bridge cannot tune the Flex. You enter the frequency below instead.</span></dd>
+              <dt>Demodulate IQ &rarr; audio</dt><dd>Off, if WSJT-X takes its receive audio from a Flex DAX audio channel<span class="why">Both bridges would otherwise push audio to the same virtual cable. If WSJT-X listens to the bridge instead, leave this on for the H bridge only.</span></dd>
+
+              <div class="where">Bridge settings</div>
+              <dt>Manual SDR frequency</dt><dd>On</dd>
+              <dt>Manual SDR freq</dt><dd>The panadapter's center frequency, e.g. <span class="mono">432.100000 MHz</span><span class="why">QMAP labels every decode from this number, so it must match where the panadapter is actually centered.</span></dd>
+              <dt>Transverter offset</dt><dd><span class="mono">0 MHz</span><span class="why">Only change this if SmartSDR shows the transverter IF rather than the on-air frequency.</span></dd>
+              <dt>Auto EME subband</dt><dd>Off<span class="why">It snaps the frequency label to a band's EME center, and the Flex would not follow.</span></dd>
+              <dt>Linrad output gain</dt><dd><span class="mono">0 dB</span><span class="why">Check this one. The dialog can show 20&nbsp;dB on a new install and saves whatever it shows.</span></dd>
+              <dt>Linrad bandwidth</dt><dd><span class="mono">192 kHz</span></dd>
+              <dt>Linrad TCP port</dt><dd><span class="mono">49812</span></dd>
+              <dt>Linrad UDP port</dt><dd><span class="mono">50004</span></dd>
+              <dt>Linrad UDP target</dt><dd><span class="mono">127.0.0.1</span><span class="why">This computer.</span></dd>
+            </dl>
+            <p class="prose">Press OK, then close and restart the bridge. The Linrad ports take effect on the next launch.</p>
+          </div>
+        </li>
+
+        <li class="step-v">
+          <div class="step-body">
+            <h3>Create the <span class="pol v">V</span> bridge</h3>
+            <p class="prose">Copy the IQ RX Bridge desktop shortcut and rename the copy <em>IQ RX Bridge V</em>. Open its Properties and add this to the end of <strong>Target</strong>, after the closing quote mark:</p>
+            <pre><code> --instance V</code></pre>
+            <p class="prose">Start the bridge from this shortcut. The window title now ends in V, and the bridge keeps its own settings file, so nothing you change here touches the H bridge. Open Settings and enter everything as for H, except these:</p>
+            <dl class="settings">
+              <div class="where">Differences from H</div>
+              <dt>Input device</dt><dd class="diff">The DAX IQ 2 device</dd>
+              <dt>Hardware label</dt><dd class="diff">Flex 6600 V</dd>
+              <dt>Demodulate IQ &rarr; audio</dt><dd class="diff">Off<span class="why">Only one program should feed WSJT-X its audio.</span></dd>
+              <dt>Linrad TCP port</dt><dd class="diff"><span class="mono">49813</span></dd>
+              <dt>Linrad UDP port</dt><dd class="diff"><span class="mono">50005</span></dd>
+            </dl>
+            <p class="prose">Press OK, close the V bridge, and start it again from the V shortcut. If you prefer, the ports can go straight onto the shortcut instead; the bridge remembers them after the first launch:</p>
+            <pre><code> --instance V --linrad-tcp-port 49813 --linrad-udp-port 50005</code></pre>
+          </div>
+        </li>
+
+        <li class="step-h">
+          <div class="step-body">
+            <h3>Check the <span class="pol h">H</span> QMAP</h3>
+            <p class="prose">Start QMAP from its normal shortcut and open <span class="menu">File &rsaquo; Settings&nbsp;...</span>. Your existing QMAP becomes the H instance, so this is mostly a check.</p>
+            <dl class="settings">
+              <div class="where">Input from Linrad or SDR Console</div>
+              <dt>Port</dt><dd><span class="mono">50004</span></dd>
+              <dt>IQ sample rate</dt><dd>Auto (detect from bridge)<span class="why">QMAP asks the bridge on the TCP port below when it starts.</span></dd>
+              <dt>Linrad host</dt><dd><span class="mono">127.0.0.1</span></dd>
+              <dt>TCP port</dt><dd><span class="mono">49812</span></dd>
+              <div class="where">Multi-Instance Identity</div>
+              <dt>Instance ID</dt><dd><span class="mono">1</span></dd>
+              <dt>Name</dt><dd>H<span class="why">Shown in the window title.</span></dd>
+            </dl>
+            <p class="prose">Restart QMAP after changing any of these.</p>
+          </div>
+        </li>
+
+        <li class="step-v">
+          <div class="step-body">
+            <h3>Create the <span class="pol v">V</span> QMAP</h3>
+            <p class="prose">Copy the QMAP shortcut, rename the copy <em>QMAP V</em>, and add this to the end of its Target:</p>
+            <pre><code> --rig-name=V</code></pre>
+            <p class="prose">Start QMAP from the new shortcut. It creates its own settings file, <code>qmap-V.ini</code>, and starts from defaults, so enter My Call and My Grid again. Then open <span class="menu">File &rsaquo; Settings&nbsp;...</span>:</p>
+            <dl class="settings">
+              <div class="where">Input from Linrad or SDR Console</div>
+              <dt>Port</dt><dd class="diff"><span class="mono">50005</span></dd>
+              <dt>IQ sample rate</dt><dd>Auto (detect from bridge)</dd>
+              <dt>Linrad host</dt><dd><span class="mono">127.0.0.1</span></dd>
+              <dt>TCP port</dt><dd class="diff"><span class="mono">49813</span></dd>
+              <div class="where">Multi-Instance Identity</div>
+              <dt>Instance ID</dt><dd class="diff"><span class="mono">2</span><span class="why">Two QMAPs on the same ID share click-to-work and work files, and step on each other.</span></dd>
+              <dt>Name</dt><dd class="diff">V</dd>
+            </dl>
+            <p class="prose">Restart QMAP V so the new port and ID take effect.</p>
+          </div>
+        </li>
+
+        <li>
+          <div class="step-body">
+            <h3>Point WSJT-X at the QMAP you are working</h3>
+            <p class="prose">One WSJT-X window serves both. Click-to-work needs Q65 mode and <span class="menu">Enable VHF and submode features</span> turned on in WSJT-X Settings.</p>
+            <ul class="prose">
+              <li>In the <span class="menu">Decode</span> menu, turn on <span class="menu">Accept QMAP/MAP65 click events</span>.</li>
+              <li>Under <span class="menu">Decode &rsaquo; QMAP/MAP65 source</span>, choose <strong>1</strong> to work from the H QMAP and <strong>2</strong> to work from V. The switch takes effect immediately, no restart.</li>
+              <li>Leave <span class="menu">Claim QMAP</span> off. It only matters when two WSJT-X windows watch the same QMAP.</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+
+      <div class="note" role="note">
+        <span class="label">Start order</span>
+        <p>Start both bridges first, then both QMAPs, then WSJT-X. QMAP asks its bridge for the sample rate as it starts, so a QMAP started before its bridge falls back to the wrong rate.</p>
+      </div>
+    </section>
+
+    <section id="check" aria-labelledby="check-h">
+      <h2 id="check-h">Check it works</h2>
+      <ul class="prose">
+        <li>Two bridge windows are open, and the second one's title ends in V.</li>
+        <li>Two QMAP windows are open, titled H and V, and both waterfalls are moving.</li>
+        <li>Tune a strong signal onto only the V transverter. It appears in QMAP V and not in QMAP H.</li>
+        <li>A frequency QMAP shows matches what SmartSDR shows for the same signal.</li>
+        <li>With source 2 selected, a double-click on a V decode sets up the QSO in WSJT-X.</li>
+      </ul>
+    </section>
+
+    <section id="trouble" aria-labelledby="trouble-h">
+      <h2 id="trouble-h">Troubleshooting</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">What you see</th><th scope="col">Why, and the fix</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">The second bridge shows H's settings, or changing one changes the other</th><td>It was started without <code>--instance V</code>. Start it from the V shortcut.</td></tr>
+            <tr><th scope="row">QMAP V's waterfall stays empty</th><td>Its Port does not match the V bridge's Linrad UDP port. Both must be <code>50005</code>. Only one QMAP can listen on a port.</td></tr>
+            <tr><th scope="row">QMAP reports it cannot reach the bridge at <code>127.0.0.1:49813</code></th><td>The V bridge is not running, or the TCP ports differ. Start the bridge first, then check both show <code>49813</code>.</td></tr>
+            <tr><th scope="row">Decodes appear on the right band but at the wrong frequency</th><td>Manual SDR freq does not match the panadapter's center, or Auto EME subband is on. Fix it on that chain's bridge.</td></tr>
+            <tr><th scope="row">Signals look mirrored around the center</th><td>Turn on Swap I/Q on that bridge.</td></tr>
+            <tr><th scope="row">The waterfall is yellow or red</th><td>Set Input gain to <span class="mono">1.00&times;</span> and Linrad output gain to <span class="mono">0 dB</span>. Then set the colors in QMAP's waterfall window with Auto Zero, bring Zero down until the noise sits dark blue, and use Gain for contrast. The colors are display only.</td></tr>
+            <tr><th scope="row">A bridge warns "WSJT-X UDP listener failed"</th><td>Follow WSJT-X dial is on while another program already listens on port 2237. Turn it off; the manual frequency replaces it.</td></tr>
+            <tr><th scope="row">Clicks in one QMAP do nothing in WSJT-X</th><td>WSJT-X is watching the other source. Change <span class="menu">Decode &rsaquo; QMAP/MAP65 source</span>, and check both QMAPs do not share an Instance ID.</td></tr>
+            <tr><th scope="row">The bridge window flashes open and closes</th><td>IQ RX Bridge v2.1.1 needs the Microsoft Visual C++ Redistributable (x64). Install it and start again.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="more" aria-labelledby="more-h">
+      <h2 id="more-h">A third instance, or a second band</h2>
+      <div class="prose" style="display: grid; gap: 0.8rem;">
+        <p>Nothing about this is specific to polarization. Two bands, two receivers, or a 96&nbsp;kHz reference QMAP beside a wide one all work the same way: a new instance name, every port one higher, and the next Instance ID. The last column of the <a href="#plan">port plan</a> shows the third set. QMAP instance IDs stop at 4.</p>
+        <p>Moving the H and V pair to 144 or 1296&nbsp;MHz is the same recipe again. Only the panadapter frequencies and each bridge's Manual SDR freq change.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Written for IQ RX Bridge v2.1.1 and the QMAP in WSJT-X Improved 3.2. Settings labels are quoted as those versions show them.</p>
+    <p>Andreas Junge, N6NU &middot; <a href="mailto:andreas@n6nu.org">andreas@n6nu.org</a> &middot; more bridge documentation at <a href="https://n6nu.github.io/N6NUBridgeLanding/">n6nu.github.io/N6NUBridgeLanding</a></p>
+  </footer>
+</div>
+</body>
+</html>
