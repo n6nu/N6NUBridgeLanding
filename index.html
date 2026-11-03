@@ -48,69 +48,138 @@
 
 <!-- ───────────────────────── Announcement ───────────────────────── -->
 <div class="announce">
-<h2>What's new in v2.x</h2>
+<h2>What's new in V3</h2>
 
 <p>
   These bridges were built first and foremost to feed <b>QMAP with a full 256 kHz of
   bandwidth</b>. (They also work for narrower digital modes, but the 256 kHz QMAP feed
   is the whole point.) The bridges also deliver 3 kHz-wide SSB/USB either via VAC or
-  TCI.
+  TCI. V3 is a sizeable step up from the v2 series: one SDR now feeds <b>two</b> WSJT-X
+  instances, there is a <b>second receiver</b> you can listen on, there is a <b>sun
+  noise meter</b>, and the band / transverter handling was rebuilt around microwave
+  work.
 </p>
 
-<h3>Two new bridges</h3>
-<ul>
-  <li><b>IC-705 (WiFi):</b> a network-attached bridge for the Icom IC-705 — no USB
-      cable. The whole reason it exists is to get the USB link out of the picture: USB
-      to the radio is a notorious noise source, and running control + audio over
-      WiFi/LAN keeps that hash off your receive. <i>In WSJT-X, choose TCI as the radio
-      and enable TCI audio; both Fake It and Rig split modes are supported.</i></li>
-  <li><b>HackRF One (RX+TX):</b> the HackRF now supports both TCI for TX and RX.
-      <i>In WSJT-X, choose TCI as the radio and enable TCI audio.</i></li>
-  <li>The existing <b>Pluto / Pluto+ (RX+TX)</b> bridge now also keys and streams TX
-      audio over TCI. <i>In WSJT-X, choose TCI as the radio and enable TCI audio.</i></li>
-</ul>
-
-<h3>TCI RX / TX support on all bridges</h3>
+<h3>Two slices &mdash; two WSJT-X instances from one SDR</h3>
 <p>
-  Every bridge in the family now speaks TCI. WSJT-X drives the bridge as a TCI
-  transceiver over the LAN — frequency, mode and PTT over a single WebSocket, with the
-  demodulated <b>RX audio</b> carried on that same link (no VB-Cable / virtual audio
-  cabling on the remote end). On the <b>TX-capable bridges</b> — Pluto RX+TX, HackRF
-  RX+TX and the IC-705 — the <b>TX audio</b> rides the TCI link too, so you transmit
-  over TCI as well. The bridge and the device can be at the dish (think Raspberry Pi /
-  Zero).
+  <b>Slice 0 is the band master</b> and the only thing that moves the SDR's LO.
+  <b>Slice 1 is a roamer</b>: its own TCI server on <b>your TCI port + 1</b> (40002 by
+  default), its own dial, and it returns to the frequency it was last on. A second
+  WSJT-X can work a different part of the same capture while the first one stays put,
+  and slice 1 can no longer drag the LO &mdash; or the mode &mdash; out from under
+  slice 0.
+</p>
+<ul>
+  <li><b>Off by default.</b> Turn it on with <i>Enable 2nd slice</i> in Settings. A
+      single-slice setup behaves as it did in v2.</li>
+  <li>On the <b>Pluto RX+TX</b> and <b>HackRF RX+TX</b> bridges slice 1 can transmit
+      too. TX is <b>first-come, first-served and non-interrupt</b>: whoever keys first
+      owns the transmitter until they let go.</li>
+  <li><b>View &rarr; Slices</b> opens a status window listing each slice with its
+      frequency, mode and TCI client count, and the panadapter marks them S0 / S1.</li>
+  <li>In every bridge except the IC-705.</li>
+</ul>
+
+<h3>A second receiver you can listen to</h3>
+<p>
+  <b>View &rarr; Receiver</b> opens an independent receiver inside the capture you are
+  already taking, with its own demodulator &mdash; <b>USB, LSB, CW, AM, NFM</b>
+  &mdash; its own volume, and its own output device, so it can go to a different
+  speaker from everything else. Tune it by absolute frequency in MHz. It costs no slice
+  and no extra hardware: it is simply another channel inside the same IQ. Useful for
+  listening to a beacon, or to the SSB calling frequency, while WSJT-X keeps decoding.
+  <i>In the SDRplay, HackRF RX+TX and Pluto RX+TX bridges.</i> The RX bridges also
+  gained a plain <b>monitor audio output</b> with a volume slider.
 </p>
 
-<h3>EME niceties</h3>
+<h3>Sun noise meter</h3>
+<p>
+  An analog-needle noise meter for antenna and system work: point at cold sky, press
+  <b>zero</b>, point at the sun, and read the <b>Y-factor</b> off the gap. Selectable
+  scale in dB per division, max- and min-hold, and an <b>AGC</b> checkbox that is there
+  to be unticked &mdash; with AGC on, Y collapses toward 0 dB and the figure means
+  nothing. On every bridge.
+</p>
+
+<h3>Microwave and transverter work</h3>
 <ul>
-  <li><b>Auto EME sub-band:</b> keeps the whole EME sub-band in view in QMAP
-      (xxx.0 to xxx.256 / 1296.0 to 1296.256) even if WSJT-X changes frequency. It
-      snaps the dial to 50.200, 144.125, 432.125, 902.125, 1296.125, the 13 cm
-      segments, 3400.125, 5760.125 and 10368.125 MHz. The optional snap stops when
-      leaving the sub-band.</li>
-  <li><b>Manual frequency entry with "Lock MHz":</b> type a full frequency directly,
-      or flip "Lock MHz" on and enter just the kHz part (e.g. <code>65</code> &rarr;
-      1296.065) while the MHz stays put — handy for transverter / microwave work where
-      only the kHz ever moves.</li>
+  <li><b>Transverter offset per band</b>, filled in from the SDR's IF, so the readout
+      and the QMAP window are in the band you are actually on rather than at the IF.</li>
+  <li><b>New bands in the table:</b> 9 cm (3400 / 3456), 13 cm including the Japanese
+      2400 segment, 2320, 5760 and 10368 MHz.</li>
+  <li><b>Park modes</b> decide where the LO sits relative to your dial: on the dial,
+      <i>Band center</i>, <i>Below band</i>, <i>Block</i>, or locked to the band, each
+      with its own per-band capture width, LO and QMAP window.</li>
+  <li><b>The QMAP / EME window center is yours, per band</b> &mdash; it is no longer a
+      fixed constant, which matters when the activity on your band is not where the
+      sub-band math puts it.</li>
+  <li>The readout shows <b>what goes out</b>, not where the LO happens to be parked,
+      and the waterfall marks the 256 kHz <b>WIDE</b> window actually being sent.</li>
 </ul>
 
-<h3>Quality-of-life</h3>
+<h3>Feeding two programs at once</h3>
+<p>
+  A <b>second program port</b> sends the same wideband IQ to a second program on the
+  same PC, <b>with its own bandwidth</b> &mdash; so EME65 can have 96 kHz while QMAP or
+  WS-MAP takes the full 256 kHz, from one bridge and one SDR. Linrad bandwidth is also
+  settable per band.
+</p>
+
+<h3>Elsewhere</h3>
 <ul>
-  <li>VFO A/B split display on the main window with an on-air highlight.</li>
-  <li><b>Headless start:</b> the bridge stays up even if the SDR isn't plugged in yet
-      — much friendlier for unattended / auto-start on a remote Pi.</li>
-  <li><b>Linrad bandwidth selector</b> (96 / 128 / 192 / 256 kHz) with in-place
-      hot-restart, so QMAP running in Auto picks up the new rate without restarting
-      anything.</li>
+  <li><b>Keep RX running during TX:</b> a full-duplex toggle for stations whose
+      receive path stays connected on transmit &mdash; it removes the gap, and the long
+      black bar, from the QMAP / WS-MAP waterfall.</li>
+  <li><b>Lock</b> replaces the old <i>Manual override</i>: typing a frequency always
+      works, and <i>Lock</i> is what stops WSJT-X or CAT from moving you off it.</li>
+  <li>Gain and front-end controls <b>apply live</b>, with no Apply click.</li>
+  <li>TCI no longer leaves a <b>stuck transmitter</b> if the client disappears, and the
+      client count covers every slice.</li>
+  <li>Window and popout positions are remembered properly, there is a band picker on
+      the band badge, and the whole family has new icons.</li>
+  <li>Every V3 installer <b>bundles the Microsoft Visual C++ runtime</b>, which is what
+      made the old v2.1.1 builds fail to start on a clean Windows machine.</li>
 </ul>
 
-<h3>Raspberry Pi builds (beta)</h3>
-<p>The bridges also build and run on the Pi. If you'd like to try them, email me.</p>
+<h3>New radios</h3>
+<p>
+  <b>Flex Bridge</b> &mdash; a new bridge for FlexRadio over the SmartSDR API, taking
+  DAX IQ for the wideband feed and the radio's own DAX audio for WSJT-X, with TX and
+  PTT. It runs <b>alongside SmartSDR</b> rather than instead of it, picks the radio
+  when several are on the LAN, and on a two-SCU radio it takes <b>two captures from one
+  bridge</b> &mdash; each with its own TCI and its own band &mdash; with TX arbitrated
+  against MultiFlex peers. It also carries an Antenna Genius row and a radio panel
+  (power, tune, antenna, meters, PG-XL / TG-XL). An <b>IC-905</b> bridge exists as
+  well.
+</p>
+<p>
+  Neither is in the list above yet &mdash; both are still being tested here. If you
+  have a Flex or an IC-905 and want to try one, email me.
+</p>
+
+<h3>Also in the v2 series</h3>
+<p>
+  If you are coming from v1: every bridge speaks <b>TCI</b>, so WSJT-X drives it as a
+  TCI transceiver over the LAN &mdash; frequency, mode, PTT and the demodulated RX
+  audio on one WebSocket, with no virtual audio cabling, and TX audio too on the
+  TX-capable bridges. The bridge and the SDR can live at the dish on a Raspberry Pi.
+  v2 also added the <b>IC-705 (WiFi)</b> and <b>HackRF One (RX+TX)</b> bridges, the
+  auto EME sub-band with dial snapping, manual entry with <i>Lock MHz</i>, headless
+  start without the SDR plugged in, and the 96 / 128 / 192 / 256 kHz Linrad bandwidth
+  selector with hot restart.
+</p>
+
+<h3>Raspberry Pi and Linux</h3>
+<p>
+  The bridges build and run on the Pi and on Debian / Ubuntu / Mint. RTL-SDR
+  <code>.deb</code> packages for amd64 and arm64 are served from this site; for the
+  others, email me.
+</p>
 
 <p>
   A big thank-you to everyone who has tested the bridges, sent feedback, reported a
-  bug, or asked for a feature — a great deal of what's in this release came straight
-  from those notes, and it's genuinely appreciated. Please keep it coming.
+  bug, or asked for a feature &mdash; a great deal of what's in V3 came straight from
+  those notes, and it's genuinely appreciated. Please keep it coming.
 </p>
 <p>— 73, Andreas, N6NU</p>
 </div>
