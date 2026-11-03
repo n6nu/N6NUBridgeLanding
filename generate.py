@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
-"""generate.py — build index.html from the bridge / version template.
+"""generate.py — SUPERSEDED, DO NOT RUN.
 
-Run after each new bridge release:
+index.html has been hand-maintained since the v2.x release and has
+diverged from this template: it carries the release announcement, the
+IC-705 bridge, the multi-instance guide link, and (since 2026-11-02)
+installer links into /beta/ rather than GitHub Releases. The constants
+below are stuck at v1.1.7 / v1.2.7 and the BETA_BUILDS filenames were
+pruned from the site. Running this would overwrite the live page with
+a 2026-era version advertising files that no longer exist.
+
+Edit index.html directly. Kept only as the record of how the page was
+originally built.
+
+Historical usage:
   py -3 C:\\dev\\N6NUBridgeLanding\\generate.py
 Output:
   C:\\dev\\N6NUBridgeLanding\\index.html
