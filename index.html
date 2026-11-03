@@ -206,6 +206,19 @@
 </p>
 
 <div class="bridge">
+  <h3>FlexRadio 6000 / 8000 <span class="new-tag">NEW</span></h3>
+  <p class="desc">A full station client, not an IQ feed: it talks the <b>SmartSDR API</b> straight over the LAN &mdash; no virtual audio cable, no sound card &mdash; and <b>creates and manages its own slices and panadapters</b> on the radio. Takes DAX IQ for the wideband feed and the radio's own DAX audio for WS, with TX and PTT, and runs <b>alongside SmartSDR</b> rather than instead of it. On a two-SCU radio it takes <b>two captures from one bridge</b>, each with its own band and its own TCI, with TX arbitrated against MultiFlex peers. Drives <b>Antenna Genius</b> port routing and a radio panel &mdash; power, tune, antenna, meters, <b>PG-XL / TG-XL</b>.</p>
+  <p class="latest">Latest:
+    <a href="beta/flex-bridge-3.1.15-setup.exe">flex-bridge-3.1.15-setup.exe</a>
+  </p>
+  <p class="meta">
+    Start here: <a href="beta/Flex-Bridge-QuickStart.pdf"><b>Flex-Bridge-QuickStart.pdf</b></a>.
+    If you used to feed a Flex through the sound-card IQ bridge over DAX-IQ and a
+    virtual cable, this replaces that.
+  </p>
+</div>
+
+<div class="bridge">
   <h3>SDRplay (RSP1A / RSPduo / RSPdx)</h3>
   <p class="desc">14-bit ADC. Requires SDRplay API 3.x service installed first from sdrplay.com.</p>
   <p class="latest">Latest:
@@ -223,7 +236,7 @@
 
 <div class="bridge">
   <h3>FunCube Pro+ V2 / Malachite / sound-card IQ</h3>
-  <p class="desc">Sound-card IQ source (any USB sound card delivering stereo IQ as audio L=I, R=Q). No special drivers — Windows audio class. <i>For a FlexRadio use the Flex Bridge below, which takes DAX IQ over the network instead.</i></p>
+  <p class="desc">Sound-card IQ source (any USB sound card delivering stereo IQ as audio L=I, R=Q). No special drivers — Windows audio class. <i>For a FlexRadio use the Flex Bridge at the top of this list, which takes DAX IQ over the network instead.</i></p>
   <p class="latest">Latest:
     <a href="beta/iq-rx-bridge-3.1.8-setup.exe">iq-rx-bridge-3.1.8-setup.exe</a>
   </p>
@@ -266,19 +279,6 @@
   <p class="desc">Same hardware as pluto-rx but with TX path enabled — now keys and streams TX audio over TCI. Use this if Pluto is your only radio (QO-100, indoor low-power tests).</p>
   <p class="latest">Latest:
     <a href="beta/pluto-wsjtx-bridge-3.1.8-setup.exe">pluto-wsjtx-bridge-3.1.8-setup.exe</a>
-  </p>
-</div>
-
-<div class="bridge">
-  <h3>FlexRadio 6000 / 8000 <span class="new-tag">NEW</span></h3>
-  <p class="desc">A full station client, not an IQ feed: it talks the <b>SmartSDR API</b> straight over the LAN &mdash; no virtual audio cable, no sound card &mdash; and <b>creates and manages its own slices and panadapters</b> on the radio. Takes DAX IQ for the wideband feed and the radio's own DAX audio for WS, with TX and PTT, and runs <b>alongside SmartSDR</b> rather than instead of it. On a two-SCU radio it takes <b>two captures from one bridge</b>, each with its own band and its own TCI, with TX arbitrated against MultiFlex peers. Drives <b>Antenna Genius</b> port routing and a radio panel &mdash; power, tune, antenna, meters, <b>PG-XL / TG-XL</b>.</p>
-  <p class="latest">Latest:
-    <a href="beta/flex-bridge-3.1.15-setup.exe">flex-bridge-3.1.15-setup.exe</a>
-  </p>
-  <p class="meta">
-    Start here: <a href="beta/Flex-Bridge-QuickStart.pdf"><b>Flex-Bridge-QuickStart.pdf</b></a>.
-    If you used to feed a Flex through the sound-card IQ bridge over DAX-IQ and a
-    virtual cable, this replaces that.
   </p>
 </div>
 
