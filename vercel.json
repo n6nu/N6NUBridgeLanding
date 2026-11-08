@@ -3,12 +3,17 @@
   "trailingSlash": false,
   "redirects": [
     {
-      "source": "/beta/CW-Thunderdome-Setup-2026.11.08b.exe",
-      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/thunderdome-2026.11.08/CW-Thunderdome-Setup-2026.11.08b.exe",
+      "source": "/beta/CW-Thunderdome-Setup-2026.11.08c.exe",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/thunderdome-2026.11.08/CW-Thunderdome-Setup-2026.11.08c.exe",
       "permanent": false
     },
     {
       "source": "/beta/CW-Thunderdome-Setup-2026.11.08.exe",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/thunderdome-2026.11.08/CW-Thunderdome-Setup-2026.11.08c.exe",
+      "permanent": false
+    },
+    {
+      "source": "/beta/CW-Thunderdome-Setup-2026.11.08b.exe",
       "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/thunderdome-2026.11.08/CW-Thunderdome-Setup-2026.11.08b.exe",
       "permanent": false
     },
