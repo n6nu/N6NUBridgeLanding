@@ -89,12 +89,17 @@
     },
     {
       "source": "/beta/ws-3.3.0.261031-win64.exe",
-      "destination": "/beta/ws-3.3.0.261101c-win64.exe",
+      "destination": "/beta/ws-3.3.0.261108-win64.exe",
       "permanent": false
     },
     {
       "source": "/beta/ws-3.3.0.261031b-win64.exe",
-      "destination": "/beta/ws-3.3.0.261101c-win64.exe",
+      "destination": "/beta/ws-3.3.0.261108-win64.exe",
+      "permanent": false
+    },
+    {
+      "source": "/beta/ws-3.3.0.261101c-win64.exe",
+      "destination": "/beta/ws-3.3.0.261108-win64.exe",
       "permanent": false
     }
   ]
