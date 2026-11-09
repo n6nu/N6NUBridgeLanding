@@ -9,12 +9,12 @@
     },
     {
       "source": "/beta/ws-3.3.0.261108hv4-win64.exe",
-      "destination": "/beta/ws-3.3.0.261108c-win64.exe",
+      "destination": "/beta/ws-3.3.0.261108d-win64.exe",
       "permanent": false
     },
     {
       "source": "/beta/ws-3.3.0.261108hv3-win64.exe",
-      "destination": "/beta/ws-3.3.0.261108c-win64.exe",
+      "destination": "/beta/ws-3.3.0.261108d-win64.exe",
       "permanent": false
     },
     {
@@ -39,12 +39,12 @@
     },
     {
       "source": "/beta/ws-3.3.0.261107hv2-win64.exe",
-      "destination": "/beta/ws-3.3.0.261108c-win64.exe",
+      "destination": "/beta/ws-3.3.0.261108d-win64.exe",
       "permanent": false
     },
     {
       "source": "/beta/ws-3.3.0.261107hv-win64.exe",
-      "destination": "/beta/ws-3.3.0.261108c-win64.exe",
+      "destination": "/beta/ws-3.3.0.261108d-win64.exe",
       "permanent": false
     },
     {
