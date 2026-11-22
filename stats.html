@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>N6NU SDR Bridges — Download stats</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+         max-width: 880px; margin: 2em auto; padding: 0 1em; color: #222; line-height: 1.5; }
+  h1   { color: #1a3d6b; border-bottom: 2px solid #1a3d6b; padding-bottom: 6px; }
+  h2   { color: #1a3d6b; margin-top: 2em; }
+  a { color: #1a3d6b; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .meta { color: #888; font-size: 0.85em; }
+  .tiles { display: flex; flex-wrap: wrap; gap: 12px; margin: 1.2em 0; }
+  .tile { flex: 1 1 150px; border: 1px solid #ddd; border-radius: 6px; background: #fafafa;
+          padding: 0.6em 1em; }
+  .tile .n { font-size: 1.9em; font-weight: bold; color: #1a3d6b; line-height: 1.2; }
+  .tile .l { font-size: 0.85em; color: #555; }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; margin: 8px 0; font-size: 0.92em; width: 100%; }
+  th { background: #1a3d6b; color: #fff; text-align: left; padding: 5px 12px; }
+  td { padding: 4px 12px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+  th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.total td { font-weight: bold; border-top: 2px solid #1a3d6b; border-bottom: none; }
+  td .sub { color: #888; font-size: 0.88em; }
+  .bar { height: 6px; background: #1a3d6b; border-radius: 3px; min-width: 1px; margin-top: 4px; }
+  .note { border: 1px solid #ddd; border-radius: 6px; background: #fafafa; padding: 0.6em 1em;
+          font-size: 0.92em; color: #555; }
+  .err { border-color: #b3261e; color: #b3261e; background: #fdf3f2; }
+  button { font: inherit; color: #1a3d6b; background: #fff; border: 1px solid #1a3d6b;
+           border-radius: 4px; padding: 2px 10px; cursor: pointer; }
+  button:hover { background: #f2f6fb; }
+  footer { margin-top: 3em; padding-top: 1em; border-top: 1px solid #ddd;
+           font-size: 0.88em; color: #666; }
+</style>
+</head>
+<body>
+<h1>Download stats</h1>
+<p class="meta">
+  <a href="/">&larr; N6NU SDR Bridges</a> &middot;
+  <span id="when">Loading&hellip;</span>
+  <button id="refresh" type="button">Refresh</button>
+</p>
+
+<div id="msg"></div>
+
+<div class="tiles" id="tiles"></div>
+
+<h2>V3 installers</h2>
+<p class="meta">Counted by GitHub each time an installer is fetched through a
+  <code>bridges.n6nu.org/beta/&hellip;</code> link. Counting starts when a build is first
+  served this way; earlier downloads were not recorded.</p>
+<div class="scroll"><table id="v3"></table></div>
+
+<h2>Earlier releases (v1 / v2)</h2>
+<p class="meta">Installers published on the per-bridge GitHub repositories. Source archives are left out.</p>
+<div class="scroll"><table id="legacy"></table></div>
+
+<h2>Other downloads</h2>
+<div class="scroll"><table id="other"></table></div>
+
+<footer>
+  Numbers come live from the GitHub Releases API and are cumulative; GitHub keeps no
+  per-day history.
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var OWNER = "n6nu";
+  var LANDING = "N6NUBridgeLanding";
+  var V3_TAG = "bridges-v3";
+  var CACHE_KEY = "n6nu-bridge-stats-v1";
+  var CACHE_MS = 10 * 60 * 1000;
+
+  // Filename prefix -> display name. Order sets the fallback sort.
+  var BRIDGES = [
+    ["flex-bridge",        "FlexRadio 6000 / 8000"],
+    ["sdrplay-rx-bridge",  "SDRplay"],
+    ["rtlsdr-rx-bridge",   "RTL-SDR"],
+    ["iq-rx-bridge",       "Sound-card IQ"],
+    ["pluto-wsjtx-bridge", "Pluto RX+TX"],
+    ["pluto-rx-bridge",    "Pluto RX"],
+    ["hackrf-wsjtx",       "HackRF RX+TX"],
+    ["hackrf-rx-bridge",   "HackRF RX"],
+    ["airspy-rx-bridge",   "AirSpy"],
+    ["ic705-bridge",       "IC-705"],
+    ["ic905-bridge",       "IC-905"]
+  ];
+  var LEGACY_REPOS = [
+    ["sdrplay-rx-bridge",        "SDRplay"],
+    ["rtlsdr-rx-bridge",         "RTL-SDR"],
+    ["iq-rx-bridge",             "Sound-card IQ"],
+    ["pluto-wsjtx-bridge",       "Pluto RX+TX"],
+    ["pluto-rx-bridge",          "Pluto RX"],
+    ["HackRF-RX-Bridge",         "HackRF RX"],
+    ["hackrf-rxtx-wsjtx-bridge", "HackRF RX+TX"],
+    ["airspy-rx-bridge",         "AirSpy"],
+    ["ic705-bridge",             "IC-705"]
+  ];
+
+  function $(id) { return document.getElementById(id); }
+  function fmt(n) { return Number(n).toLocaleString("en-US"); }
+  function el(tag, attrs, kids) {
+    var e = document.createElement(tag), k;
+    for (k in (attrs || {})) {
+      if (k === "text") { e.textContent = attrs[k]; } else { e.setAttribute(k, attrs[k]); }
+    }
+    (kids || []).forEach(function (c) { e.appendChild(c); });
+    return e;
+  }
+  function isInstaller(name) { return !/\.tar\.gz$|-src\./i.test(name); }
+  function bridgeOf(name) {
+    for (var i = 0; i < BRIDGES.length; i++) {
+      if (name.indexOf(BRIDGES[i][0]) === 0) { return BRIDGES[i]; }
+    }
+    return null;
+  }
+  function versionOf(name) {
+    var m = name.match(/[-_](\d+(?:\.\d+)+(?:-\d+)?)[-_]/);
+    var arch = name.match(/_(amd64|arm64)\.deb$/);
+    return (m ? m[1] : name) + (arch ? " (" + arch[1] + " .deb)" : "");
+  }
+
+  function fetchReleases(repo) {
+    var url = "https://api.github.com/repos/" + OWNER + "/" + repo + "/releases?per_page=100";
+    return fetch(url, { headers: { "Accept": "application/vnd.github+json" } })
+      .then(function (r) {
+        if (!r.ok) {
+          var limited = r.status === 403 || r.status === 429;
+          throw new Error(limited
+            ? "GitHub's hourly request limit for this network was reached. Try again in a while."
+            : "GitHub returned " + r.status + " for " + repo + ".");
+        }
+        return r.json();
+      })
+      .then(function (list) {
+        return list.map(function (rel) {
+          return {
+            tag: rel.tag_name,
+            assets: rel.assets.map(function (a) {
+              return { name: a.name, n: a.download_count, at: a.created_at };
+            })
+          };
+        });
+      });
+  }
+
+  function load(force) {
+    if (!force) {
+      try {
+        var c = JSON.parse(sessionStorage.getItem(CACHE_KEY) || "null");
+        if (c && Date.now() - c.t < CACHE_MS) { return Promise.resolve(c); }
+      } catch (e) { /* no storage: fetch */ }
+    }
+    var repos = [LANDING].concat(LEGACY_REPOS.map(function (r) { return r[0]; }));
+    return Promise.all(repos.map(fetchReleases)).then(function (all) {
+      var data = { t: Date.now(), repos: {} };
+      repos.forEach(function (r, i) { data.repos[r] = all[i]; });
+      try { sessionStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (e) { /* ignore */ }
+      return data;
+    });
+  }
+
+  function headRow(cols) {
+    return el("tr", {}, cols.map(function (c) {
+      return el("th", c.num ? { "class": "num", text: c.t } : { text: c.t });
+    }));
+  }
+  function fill(table, cols, rows, emptyText) {
+    table.textContent = "";
+    table.appendChild(headRow(cols));
+    if (!rows.length) {
+      table.appendChild(el("tr", {}, [el("td", { colspan: String(cols.length), "class": "meta", text: emptyText })]));
+      return;
+    }
+    rows.forEach(function (r) { table.appendChild(r); });
+  }
+  function nameCell(title, sub, share) {
+    var td = el("td", {}, [el("div", { text: title })]);
+    if (sub) { td.appendChild(el("div", { "class": "sub", text: sub })); }
+    if (share != null) {
+      var bar = el("div", { "class": "bar" });
+      bar.style.width = Math.max(1, Math.round(share * 100)) + "%";
+      td.appendChild(bar);
+    }
+    return td;
+  }
+  function numCell(n) { return el("td", { "class": "num", text: fmt(n) }); }
+  function totalRow(label, n, pad) {
+    var cells = [el("td", { text: label })];
+    for (var i = 0; i < pad; i++) { cells.push(el("td", {})); }
+    cells.push(numCell(n));
+    return el("tr", { "class": "total" }, cells);
+  }
+
+  function render(data) {
+    var landing = data.repos[LANDING] || [];
+
+    // --- V3: assets on the bridges-v3 release, grouped by bridge ---
+    var v3Assets = [];
+    var otherAssets = [];
+    landing.forEach(function (rel) {
+      rel.assets.forEach(function (a) {
+        if (rel.tag === V3_TAG && bridgeOf(a.name)) { v3Assets.push(a); }
+        else { otherAssets.push({ name: a.name, n: a.n, tag: rel.tag }); }
+      });
+    });
+    var groups = {};
+    v3Assets.forEach(function (a) {
+      var b = bridgeOf(a.name);
+      (groups[b[0]] = groups[b[0]] || { label: b[1], total: 0, builds: [] });
+      groups[b[0]].total += a.n;
+      groups[b[0]].builds.push(a);
+    });
+    var v3List = Object.keys(groups).map(function (k) { return groups[k]; })
+      .sort(function (x, y) { return y.total - x.total || x.label.localeCompare(y.label); });
+    var v3Total = v3List.reduce(function (s, g) { return s + g.total; }, 0);
+    var v3Max = v3List.length ? Math.max(1, v3List[0].total) : 1;
+    var v3Rows = v3List.map(function (g) {
+      g.builds.sort(function (x, y) { return y.at < x.at ? -1 : 1; });
+      var per = g.builds.map(function (a) { return versionOf(a.name) + ": " + fmt(a.n); }).join(" · ");
+      return el("tr", {}, [nameCell(g.label, null, g.total / v3Max), el("td", { "class": "sub", text: per }), numCell(g.total)]);
+    });
+    if (v3Rows.length) { v3Rows.push(totalRow("Total", v3Total, 1)); }
+    fill($("v3"), [{ t: "Bridge" }, { t: "By build" }, { t: "Downloads", num: true }], v3Rows,
+      "No V3 installers are being counted yet.");
+
+    // --- Legacy: per-bridge repos ---
+    var legacy = LEGACY_REPOS.map(function (r) {
+      var total = 0, top = null, count = 0;
+      (data.repos[r[0]] || []).forEach(function (rel) {
+        rel.assets.forEach(function (a) {
+          if (!isInstaller(a.name)) { return; }
+          total += a.n; count += 1;
+          if (!top || a.n > top.n) { top = a; }
+        });
+      });
+      return { label: r[1], total: total, top: top, count: count };
+    }).sort(function (x, y) { return y.total - x.total; });
+    var legacyTotal = legacy.reduce(function (s, g) { return s + g.total; }, 0);
+    var legacyMax = legacy.length ? Math.max(1, legacy[0].total) : 1;
+    var legacyRows = legacy.map(function (g) {
+      var top = g.top ? versionOf(g.top.name) + ": " + fmt(g.top.n) : "";
+      return el("tr", {}, [
+        nameCell(g.label, g.count + (g.count === 1 ? " build" : " builds"), g.total / legacyMax),
+        el("td", { "class": "sub", text: top }), numCell(g.total)]);
+    });
+    legacyRows.push(totalRow("Total", legacyTotal, 1));
+    fill($("legacy"), [{ t: "Bridge" }, { t: "Most downloaded build" }, { t: "Downloads", num: true }], legacyRows, "");
+
+    // --- Other assets on the landing repo ---
+    otherAssets.sort(function (x, y) { return y.n - x.n; });
+    var otherTotal = otherAssets.reduce(function (s, a) { return s + a.n; }, 0);
+    var otherRows = otherAssets.map(function (a) {
+      return el("tr", {}, [nameCell(a.name, a.tag), numCell(a.n)]);
+    });
+    if (otherRows.length) { otherRows.push(totalRow("Total", otherTotal, 0)); }
+    fill($("other"), [{ t: "File" }, { t: "Downloads", num: true }], otherRows, "None.");
+
+    // --- Tiles ---
+    var tiles = $("tiles");
+    tiles.textContent = "";
+    [[v3Total, "V3 installers"], [legacyTotal, "v1 / v2 installers"],
+     [otherTotal, "Other downloads"], [v3Total + legacyTotal + otherTotal, "All downloads"]]
+      .forEach(function (t) {
+        tiles.appendChild(el("div", { "class": "tile" }, [
+          el("div", { "class": "n", text: fmt(t[0]) }), el("div", { "class": "l", text: t[1] })]));
+      });
+
+    $("when").textContent = "Updated " + new Date(data.t).toLocaleString() + " ";
+  }
+
+  function run(force) {
+    $("msg").textContent = "";
+    $("when").textContent = "Loading… ";
+    load(force).then(render).catch(function (e) {
+      $("when").textContent = "Not loaded ";
+      $("msg").appendChild(el("p", { "class": "note err", text: e.message || String(e) }));
+    });
+  }
+
+  $("refresh").addEventListener("click", function () { run(true); });
+  run(false);
+})();
+</script>
+</body>
+</html>

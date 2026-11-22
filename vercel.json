@@ -3,6 +3,66 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/beta/flex-bridge-3.1.19-setup.exe",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/bridges-v3/flex-bridge-3.1.19-setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/beta/sdrplay-rx-bridge-3.1.12-setup.exe",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/bridges-v3/sdrplay-rx-bridge-3.1.12-setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/beta/rtlsdr-rx-bridge-3.1.9-setup.exe",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/bridges-v3/rtlsdr-rx-bridge-3.1.9-setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/beta/iq-rx-bridge-3.1.8-setup.exe",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/bridges-v3/iq-rx-bridge-3.1.8-setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/beta/pluto-wsjtx-bridge-3.1.8-setup.exe",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/bridges-v3/pluto-wsjtx-bridge-3.1.8-setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/beta/pluto-rx-bridge-3.1.8-setup.exe",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/bridges-v3/pluto-rx-bridge-3.1.8-setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/beta/hackrf-wsjtx-3.1.8-setup.exe",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/bridges-v3/hackrf-wsjtx-3.1.8-setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/beta/hackrf-rx-bridge-3.1.8-setup.exe",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/bridges-v3/hackrf-rx-bridge-3.1.8-setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/beta/airspy-rx-bridge-3.1.9-setup.exe",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/bridges-v3/airspy-rx-bridge-3.1.9-setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/beta/ic705-bridge-3.1.3-setup.exe",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/bridges-v3/ic705-bridge-3.1.3-setup.exe",
+      "permanent": false
+    },
+    {
+      "source": "/beta/rtlsdr-rx-bridge_3.1.3-2_amd64.deb",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/bridges-v3/rtlsdr-rx-bridge_3.1.3-2_amd64.deb",
+      "permanent": false
+    },
+    {
+      "source": "/beta/rtlsdr-rx-bridge_3.1.3_arm64.deb",
+      "destination": "https://github.com/n6nu/N6NUBridgeLanding/releases/download/bridges-v3/rtlsdr-rx-bridge_3.1.3_arm64.deb",
+      "permanent": false
+    },
+    {
       "source": "/beta/ws-3.3.0.261119c-win64.exe",
       "destination": "/beta/ws-3.3.0.261119d-win64.exe",
       "permanent": false
